@@ -1,7 +1,7 @@
 {
     "name": "stalker-debugger",
     "publisher": "spencerjames",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "displayName": ".NET Stalker Debugger",
     "description": "Builds, runs, attaches, hot reloads, rebuilds and reattaches a .NET project, with client-side JS/TS breakpoint support. All in one debug session.",
     "author": {
