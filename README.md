@@ -4,36 +4,7 @@
 <p align="center" style="margin:0 0 0 0;font-weight:bold;font-size:1.25em">3-in-1 ASP.NET (5+ and Core) debugger for Visual Studio Code</p>
 <p align="center" style="margin:0 0 20px 0;">(Replaces default debugger in launch configurations in <code>launch.json</code>)</p>
 
-<p align="center">
-<img src="images/VSCode-DotNetBreakpoint.png" alt=".NET Breakpoint" width="446"/><br/>
-<span style="font-size:.85em">Backend: C#/.NET breakpoint in VS Code</span>
-</p>
-
-<p align="center">
-<img src="images/VSCode-TSBreakpoint.png" alt="TypeScript Breakpoint" width="733"/><br/>
-<span style="font-size:.85em">Front-end: TypeScript breakpoint in VS Code (though running transpiled as JavaScript on client-side)</span>
-</p>
-
-# Table of Contents
-
--   [Overview](#overview)
--   [Primary Three Features](#primary-three-features)
-    -   [Phases and Tooling](#phases-and-tooling)
--   [Requirements](#requirements)
--   [Launch Configurations](#launch-configurations)
-    -   [Properties](#properties)
-    -   [Examples](#examples)
--   [Client-Side JavaScript/TypeScript Debugging](#client-side-javascripttypescript-debugging)
-    -   [Google Chrome](#google-chrome)
-    -   [Node.js](#nodejs)
-    -   [Node Package Dependencies](#node-package-dependencies)
-    -   [TypeScript, ESLint and Webpack Configuration Files](#typescript-eslint-and-webpack-configuration-files)
-    -   [Launch Configuration Modifications](#launch-configuration-modifications)
--   [Extension Settings](#extension-settings)
--   [Known Issues](#known-issues)
--   [Release Notes / Changelog](#release-notes--changelog)
-
-# Overview
+# .NET Stalker Debugger
 
 ### 🛠️ Typical Dev Stack
 
@@ -53,6 +24,39 @@ Automatically re-attaches to the project's new process (on "hot reload" builds).
 
 <p align="center" style="font-size:1.25em">🚫 No need to manually stop, re-attach or restart debuggers or run multiple tasks 🚫</p>
 <p align="center" style="font-size:1.25em">🎉 All in a single debug session within Visual Studio Code 🎉</p>
+
+<p align="center">
+<img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
+<span style="font-size:.85em">.NET Stalker Debugger: VS Code debug console output</span>
+</p>
+
+<p align="center">
+<img src="images/VSCode-DotNetBreakpoint.png" alt=".NET Breakpoint" width="446"/><br/>
+<span style="font-size:.85em">Backend: C#/.NET breakpoint in VS Code</span>
+</p>
+
+<p align="center">
+<img src="images/VSCode-TSBreakpoint.png" alt="TypeScript Breakpoint" width="733"/><br/>
+<span style="font-size:.85em">Front-end: TypeScript breakpoint in VS Code (though running transpiled as JavaScript on client-side)</span>
+</p>
+
+# Table of Contents
+
+-   [Primary Three Features](#primary-three-features)
+    -   [Phases and Tooling](#phases-and-tooling)
+-   [Requirements](#requirements)
+-   [Launch Configurations](#launch-configurations)
+    -   [Properties](#properties)
+    -   [Examples](#examples)
+-   [Client-Side JavaScript/TypeScript Debugging](#client-side-javascripttypescript-debugging)
+    -   [Google Chrome](#google-chrome)
+    -   [Node.js](#nodejs)
+    -   [Node Package Dependencies](#node-package-dependencies)
+    -   [TypeScript, ESLint and Webpack Configuration Files](#typescript-eslint-and-webpack-configuration-files)
+    -   [Launch Configuration Modifications](#launch-configuration-modifications)
+-   [Extension Settings](#extension-settings)
+-   [Known Issues](#known-issues)
+-   [Release Notes / Changelog](#release-notes--changelog)
 
 # Primary Three Features
 
@@ -90,11 +94,6 @@ Logical order of phases within the three primary features.
 <p align="center">
 <img src="images/VSCode-Debugger.png" alt="Debugger" width="336"/><br/>
 <span style="font-size:.85em">.NET Stalker Debugger: VS Code debugger call stack</span>
-</p>
-
-<p align="center">
-<img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="443"/><br/>
-<span style="font-size:.85em">.NET Stalker Debugger: VS Code debug console output</span>
 </p>
 
 <p align="center">

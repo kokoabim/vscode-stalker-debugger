@@ -137,8 +137,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         this.checkProcessesInterval = setInterval(async () => {
             let processes = [];
 
+            // NOTE: `findProcesses` returns array of objects that _do_ have a property of `bin` though not in the type definition (hence the cast to any)
+
             processes = await findProcesses("name", `${this.debugConfiguration.watchOptions.dotnet} watch run`);
-            const dotNetWatchProcess = processes.find(p => p.cmd.includes(this.projectFileName));
+            const dotNetWatchProcess = processes.find(p => (<any>p).bin === `${this.debugConfiguration.watchOptions.dotnet} watch run` && p.cmd.includes(this.projectFileName));
 
             // dotnet watch...
 
@@ -158,8 +160,8 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
             // child process (i.e. the project being watched)...
 
-            processes = await findProcesses("name", this.processFileName);
-            const childProcess = processes.find(p => p.bin.endsWith(`/${this.processFileName}`));
+            processes = (await findProcesses("name", this.processFileName));
+            const childProcess = processes.find(p => (<any>p).bin.endsWith(`/${this.processFileName}`));
 
             if (!childProcess) {
                 if (this.isChildProcessRunning) {
