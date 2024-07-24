@@ -166,7 +166,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
             if (!childProcess) {
                 if (this.isChildProcessRunning) {
                     this.childPid = 0;
-                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '🔥 Child process is no longer running. A hot reload rebuild must be is in process.\n' } });
+                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '🔥 Child process is no longer running. A hot reload build should be in process.\n' } });
 
                     this.restartCheckProcessesInterval(this.debugConfiguration.attachOptions.interval ?? (StalkerDebugAdapter.DefaultIntervalMs / 2)); // (most likely) speeds up the interval
                 }

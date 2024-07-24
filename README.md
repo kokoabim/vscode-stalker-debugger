@@ -16,7 +16,7 @@ Actively "hot reload" backend changes and "hot transpile" front-end changes (Typ
 
 ### 🪲 Dual-Debugging
 
-Debugging of backend and front-end (using Google Chrome'd developer tool) both within Visual Studio Code simultaneously.
+Debugging of backend and front-end (using Google Chrome's developer tool) both within Visual Studio Code simultaneously.
 
 ### 🚀 Continuous Re-Attaching
 
@@ -38,6 +38,11 @@ Automatically re-attaches to the project's new process (on "hot reload" builds).
 <p align="center">
 <img src="images/VSCode-TSBreakpoint.png" alt="TypeScript Breakpoint" width="733"/><br/>
 <span style="font-size:.85em">Front-end: TypeScript breakpoint in VS Code (though running transpiled as JavaScript on client-side)</span>
+</p>
+
+<p align="center">
+<img src="images/VSCode-LaunchJson.png" alt="Launch Configuration Snippets" width="446"/><br/>
+<span style="font-size:.85em">Launch configuration snippets available in <code>launch.json</code></span>
 </p>
 
 # Table of Contents
@@ -89,7 +94,7 @@ Logical order of phases within the three primary features.
 | 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                    |
 | 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed |
 
-# Screen Shots
+## Misc Screen Shots
 
 <p align="center">
 <img src="images/VSCode-Debugger.png" alt="Debugger" width="336"/><br/>
@@ -103,6 +108,7 @@ Logical order of phases within the three primary features.
 
 # Requirements
 
+-   macOS, possibly Linux (not yet Windows)
 -   .NET SDK 6.0 or later
 -   Visual Studio Code 1.80.0 or later
 -   Visual Studio Code extensions [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
