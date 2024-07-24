@@ -1,0 +1,42 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "format": [
+                    "camelCase",
+                    "PascalCase"
+                ],
+                "selector": "import"
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-inferrable-types": "warn",
+        "@typescript-eslint/no-unused-expressions": "warn",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/semi": "warn",
+        "curly": [
+            "warn",
+            "multi-line"
+        ],
+        "eqeqeq": "warn",
+        "no-throw-literal": "warn",
+        "no-unused-vars": "off",
+        "semi": "off",
+        "no-empty": "warn"
+    }
+}

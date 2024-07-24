@@ -1,0 +1,17 @@
+.vscode/*
+docs/*
+images/*
+releases/*
+src/*
+
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+.vscodeignore
+tsconfig.json
+
+**/*.map
+**/*.ts
+**/*.test.ts
+**/*.vsix

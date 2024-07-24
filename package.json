@@ -1,0 +1,412 @@
+{
+    "name": "stalker-debugger",
+    "publisher": "spencerjames",
+    "version": "0.0.1",
+    "displayName": ".NET Stalker Debugger",
+    "description": "Builds, runs, attaches, hot reloads, rebuilds and reattaches a .NET project, with client-side JS/TS breakpoint support. All in one debug session.",
+    "author": {
+        "name": "Spencer James (kokoabim)",
+        "email": "dev@kokoabim.com",
+        "url": "https://swsj.me/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kokoabim/vscode-stalker-debugger"
+    },
+    "license": "SEE LICENSE IN LICENSE.md",
+    "icon": "./dist/images/bug-512.png",
+    "contributors": [
+        {
+            "name": "Spencer James (kokoabim)",
+            "email": "dev@kokoabim.com",
+            "url": "https://swsj.me/"
+        }
+    ],
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Debuggers",
+        "Programming Languages"
+    ],
+    "keywords": [
+        "debugger",
+        "dotnet",
+        ".net",
+        "watch",
+        "attach",
+        "re-attach",
+        "c#",
+        "csharp",
+        "stalker"
+    ],
+    "activationEvents": [
+        "onDebugResolve:stalker"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "problemMatchers": [
+            {
+                "name": "stalker",
+                "pattern": {
+                    "regexp": ".*"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Hot reload enabled",
+                    "endsPattern": "Content root path:"
+                }
+            }
+        ],
+        "debuggers": [
+            {
+                "label": ".NET Stalker Debugger",
+                "type": "stalker",
+                "runtime": "dotnet",
+                "languages": [
+                    "csharp",
+                    "c#",
+                    "aspnet",
+                    "aspnetcore",
+                    "dotnet",
+                    "dotnetcore"
+                ],
+                "initialConfigurations": [
+                    {
+                        "name": ".NET Stalker",
+                        "type": "stalker",
+                        "request": "launch",
+                        "vars": {
+                            "framework": "net8.0",
+                            "projectDir": "${workspaceFolder}/src/${var:projectName}",
+                            "projectName": "<PROJECTNAME>"
+                        },
+                        "project": "${var:projectDir}/${var:projectName}.csproj",
+                        "process": "${var:projectDir}/bin/Debug/${var:framework}/${var:projectName}",
+                        "cwd": "${var:projectDir}",
+                        "url": "http://localhost:5000",
+                        "env": {
+                            "ASPNETCORE_ENVIRONMENT": "Development"
+                        }
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": ".NET: Stalker (Minimal)",
+                        "description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds.",
+                        "body": {
+                            "name": ".NET Stalker (Minimal)",
+                            "type": "stalker",
+                            "request": "launch",
+                            "vars": {
+                                "framework": "net8.0",
+                                "projectDir": "${workspaceFolder}/src/${var:projectName}",
+                                "projectName": "<PROJECTNAME>"
+                            },
+                            "project": "${var:projectDir}/${var:projectName}.csproj",
+                            "process": "${var:projectDir}/bin/Debug/${var:framework}/${var:projectName}",
+                            "cwd": "${var:projectDir}",
+                            "url": "http://localhost:5000",
+                            "env": {
+                                "ASPNETCORE_ENVIRONMENT": "Development"
+                            }
+                        }
+                    },
+                    {
+                        "label": ".NET: Stalker (ESLint + Webpack; Google Chrome)",
+                        "description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds. Runs ESLint and Webpack (with watch mode) before build. Debugs client-side using Google Chrome.",
+                        "body": {
+                            "name": ".NET Stalker (Full)",
+                            "type": "stalker",
+                            "request": "launch",
+                            "vars": {
+                                "framework": "net8.0",
+                                "projectDir": "${workspaceFolder}/src/${var:projectName}",
+                                "projectName": "<PROJECTNAME>"
+                            },
+                            "project": "${var:projectDir}/${var:projectName}.csproj",
+                            "process": "${var:projectDir}/bin/Debug/${var:framework}/${var:projectName}",
+                            "cwd": "${var:projectDir}",
+                            "env": {
+                                "ASPNETCORE_ENVIRONMENT": "Development",
+                                "NODE_ENV": "development"
+                            },
+                            "url": "http://localhost:5000",
+                            "webRoot": "${var:projectDir}/wwwroot",
+                            "buildOptions": {
+                                "preBuildTasks": [
+                                    {
+                                        "name": "ESLint",
+                                        "commandLine": "npx eslint --ext .ts --color ./scripts",
+                                        "isBackground": false,
+                                        "waitFor": true,
+                                        "failOnNonZeroExitCode": true
+                                    },
+                                    {
+                                        "name": "Webpack",
+                                        "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} -d source-map --color",
+                                        "isBackground": false,
+                                        "waitFor": false,
+                                        "failOnNonZeroExitCode": true
+                                    }
+                                ]
+                            },
+                            "attachOptions": {
+                                "action": "debugWithChrome"
+                            }
+                        }
+                    }
+                ],
+                "configurationAttributes": {
+                    "launch": {
+                        "properties": {
+                            "attachOptions": {
+                                "type": "object",
+                                "description": "Options for attaching to the child process started by .NET Watch.",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "description": "Action to take when the child process is initially attached to. Default is `openExternally`.",
+                                        "enum": [
+                                            "nothing",
+                                            "openExternally",
+                                            "debugWithChrome"
+                                        ],
+                                        "enumDescriptions": [
+                                            "Do nothing",
+                                            "Open the URL in the default browser",
+                                            "Open the URL in Chrome with the debugger attached"
+                                        ],
+                                        "default": "openExternally"
+                                    },
+                                    "interval": {
+                                        "type": "number",
+                                        "description": "Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). Default is `500`.",
+                                        "default": 500
+                                    },
+                                    "taskProperties": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "types": [
+                                                "string",
+                                                "number",
+                                                "boolean",
+                                                "object"
+                                            ]
+                                        },
+                                        "description": "Properties for internal the Visual Studio Code attach task. Cannot contain the following properties: `name`, `type`, `request`, or `processId`. Default has `logging.moduleLoad` set to `false`.",
+                                        "default": {
+                                            "logging": {
+                                                "moduleLoad": false
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "buildOptions": {
+                                "type": "object",
+                                "description": "Options relating to building.",
+                                "properties": {
+                                    "preBuildTasks": {
+                                        "type": "array",
+                                        "description": "Tasks to run before running .NET Watch (which builds and runs the project). Tasks are run in order. By default, tasks are not treated as background tasks and are waited for before continuing. Use `isBackground` and `waitFor` change behavior. Default is an empty array.",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "Name of the task to run.",
+                                                    "default": ""
+                                                },
+                                                "commandLine": {
+                                                    "type": "string",
+                                                    "description": "Command line to run.",
+                                                    "default": ""
+                                                },
+                                                "isBackground": {
+                                                    "type": "boolean",
+                                                    "description": "Indicate whether the task is a background task or not. Default is `false`.",
+                                                    "default": false
+                                                },
+                                                "waitFor": {
+                                                    "type": "boolean",
+                                                    "description": "Indicate whether to wait for the task to complete before continuing. Default is `true`.",
+                                                    "default": true
+                                                },
+                                                "failOnNonZeroExitCode": {
+                                                    "type": "boolean",
+                                                    "description": "Indicate whether to fail the build if the task has a non-zero exit code. Default is `false`.",
+                                                    "default": false
+                                                }
+                                            },
+                                            "required": [
+                                                "name",
+                                                "commandLine"
+                                            ]
+                                        },
+                                        "default": []
+                                    }
+                                },
+                                "default": {}
+                            },
+                            "cwd": {
+                                "type": "string",
+                                "description": "Path to the working directory of the project being debugged. Default is the current workspace. Normally takes on the form of: ${workspaceFolder}/src/(projectName)",
+                                "default": "${workspaceFolder}"
+                            },
+                            "env": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "string"
+                                },
+                                "description": "Environment variables passed to .NET Watch and subsequently the child process.",
+                                "default": {}
+                            },
+                            "processOptions": {
+                                "type": "object",
+                                "properties": {
+                                    "args": {
+                                        "type": "array",
+                                        "description": "Arguments passed to the child process.",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "default": []
+                                    },
+                                    "launchProfile": {
+                                        "type": "string",
+                                        "description": "Launch profile (in `Properties/launchSettings.json`) to start the child process with. If used, the `url` property is ignored.",
+                                        "default": ""
+                                    }
+                                },
+                                "description": "Options for child process started by .NET Watch.",
+                                "default": {}
+                            },
+                            "process": {
+                                "type": "string",
+                                "description": "Path to the executable of the project to run and watch which will be the \"child process\" to attach (and continually re-attach) to. This property normally takes the form of: ${workspaceFolder}/src/(projectName)/bin/Debug/(framework-version)/(projectName)",
+                                "default": ""
+                            },
+                            "project": {
+                                "type": "string",
+                                "description": "Path to the project to run and watch. This property normally takes the form of: ${workspaceFolder}/src/(projectName)/(projectName).csproj",
+                                "default": ""
+                            },
+                            "url": {
+                                "type": "string",
+                                "description": "Local URL and port to listen on. Default is `http://localhost:5000`. Ignored if `processOptions.launchProfile` is used. Do not use a `https://` prefix.",
+                                "default": "http://localhost:5000"
+                            },
+                            "vars": {
+                                "type": "object",
+                                "description": "Launch configuration variables. For use with other launch configuration properties. Reference only VSCode variables. Do not reference other launch configuration variables. Not used directly by the extension for functionality.",
+                                "properties": {
+                                    "framework": {
+                                        "type": "string",
+                                        "description": "Target framework.",
+                                        "default": ""
+                                    },
+                                    "projectDir": {
+                                        "type": "string",
+                                        "description": "Path to the project directory. Normally takes on the form of: ${workspaceFolder}/src/(projectName)",
+                                        "default": ""
+                                    },
+                                    "projectName": {
+                                        "type": "string",
+                                        "description": "Project name.",
+                                        "default": ""
+                                    }
+                                }
+                            },
+                            "watchOptions": {
+                                "type": "object",
+                                "properties": {
+                                    "args": {
+                                        "type": "array",
+                                        "description": "Arguments passed to .NET Watch.",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "default": []
+                                    },
+                                    "disableOptimizations": {
+                                        "type": "boolean",
+                                        "description": "Disable MSBuild optimizations.",
+                                        "default": false
+                                    },
+                                    "doNotLaunchBrowser": {
+                                        "type": "boolean",
+                                        "description": "Do not launch the browser if the `launchProfile` property is used and is configured to do so. Ignored if `processOptions.action` is not `nothing`.",
+                                        "default": false
+                                    },
+                                    "doNotRefreshBrowser": {
+                                        "type": "boolean",
+                                        "description": "Do not refresh the browser when changes are detected. If browser is not refreshing, see `usePollingFileWatcher` property and https://learn.microsoft.com/en-us/aspnet/core/tutorials/dotnet-watch#browser-refresh.",
+                                        "default": false
+                                    },
+                                    "dotnet": {
+                                        "type": "string",
+                                        "description": "Path to the dotnet executable. Default is the `dotnet` executable found in the system PATH.",
+                                        "default": "dotnet"
+                                    },
+                                    "interval": {
+                                        "type": "number",
+                                        "description": "Interval in milliseconds to check if child process has restarted, after a hot load build, to re-attach to it. Default is `1000`.",
+                                        "default": 1000
+                                    },
+                                    "noEmojis": {
+                                        "type": "boolean",
+                                        "description": "Disable emojis in the console output.",
+                                        "default": false
+                                    },
+                                    "usePollingFileWatcher": {
+                                        "type": "boolean",
+                                        "description": "Use polling file watcher. This is required for some file systems, such as network shares, Docker mounted volumes, and other virtual file systems.",
+                                        "default": false
+                                    },
+                                    "verbose": {
+                                        "type": "boolean",
+                                        "description": "Enable verbose logging for .NET Watch.",
+                                        "default": false
+                                    }
+                                },
+                                "description": "Options for .NET Watch.",
+                                "default": {}
+                            },
+                            "webRoot": {
+                                "type": "string",
+                                "description": "Path to the web root of the project being debugged with Google Chrome. Ignored if `processOptions.action` is not `debugWithChrome`. Default is the current workspace but normally takes on the form of: ${workspaceFolder}/src/(projectName)/wwwroot",
+                                "default": "${workspaceFolder}"
+                            }
+                        },
+                        "required": [
+                            "process",
+                            "project",
+                            "cwd"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm install && npm run compile && npm prune --omit=dev",
+        "compile": "tsc -p ./ && copyfiles ./images/bug-512.* ./dist/",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext .ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20.14.11",
+        "@types/vscode": "^1.80.0",
+        "@typescript-eslint/eslint-plugin": "^7.16.1",
+        "@typescript-eslint/parser": "^7.16.1",
+        "@vscode/debugadapter": "^1.66.0",
+        "@vscode/test-electron": "^2.3.3",
+        "eslint": "^8.57.0",
+        "typescript": "^5.5.3"
+    },
+    "dependencies": {
+        "find-process": "^1.4.7"
+    }
+}
