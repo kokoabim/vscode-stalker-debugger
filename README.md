@@ -252,7 +252,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
         "ASPNETCORE_ENVIRONMENT": "Development",
         "NODE_ENV": "development"
     },
-    "url": "http://localhost:5000",
+    "url": "http://localhost:5001",
     "webRoot": "${var:projectDir}/wwwroot",
     "buildOptions": {
         "preBuildTasks": [
@@ -471,6 +471,11 @@ There are no global/user extension settings. All settings are configured on a pr
 This extension is in early development. Please report any issues.
 
 # Release Notes / Changelog
+
+#### 2024-09-09 — 0.0.3
+
+-   Fixed configuration snippets.
+-   Added configuration snippet that includes debugging with Google Chrome.
 
 #### 2024-07-23 — 0.0.2
 

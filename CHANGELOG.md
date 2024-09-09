@@ -1,5 +1,10 @@
 ## ⍺ Alpha
 
+#### 2024-09-09 — 0.0.3
+
+-   Fixed configuration snippets.
+-   Added configuration snippet that includes debugging with Google Chrome.
+
 #### 2024-07-23 — 0.0.2
 
 -   Minor grammar correction.
