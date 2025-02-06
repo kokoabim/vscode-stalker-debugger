@@ -1,5 +1,6 @@
-.DS_Store
-dist/*
-node_modules/*
-releases/*
-**/*.vsix
+**/.DS_Store
+.vscode-test/
+dist/
+lib/
+node_modules/
+releases/

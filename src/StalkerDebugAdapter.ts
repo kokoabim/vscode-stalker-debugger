@@ -189,23 +189,30 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     type: 'coreclr',
                     request: 'attach',
                     processId: this.childPid,
+                    logging: this.debugConfiguration.logging,
+                    console: this.debugConfiguration.console,
                     ...this.debugConfiguration.attachOptions.taskProperties
                 }, this.debugSession)) {
                     this.attachedIncrement++;
                     this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔗 Attached to child process (${this.attachedIncrement}).\n` } });
 
                     if (this.attachedIncrement === 1 && this.debugConfiguration.attachOptions.action && this.debugConfiguration.attachOptions.action !== "nothing" && this.debugConfiguration.url) {
+                        let url = this.debugConfiguration.url.replaceAll("0.0.0.0", "localhost").split(";")[0].trim().replace(/\/+$/, '');
+
+                        let urlPath = this.debugConfiguration.attachOptions.urlPath?.trim().replace(/^\/+/, '');
+                        if (urlPath) url += `/${urlPath}`;
+
                         if (this.debugConfiguration.attachOptions.action === "openExternally") {
-                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🕸️ Opening URL externally (${this.debugConfiguration.url}).\n` } });
-                            await env.openExternal(Uri.parse(this.debugConfiguration.url));
+                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🕸️ Opening URL externally (${url}).\n` } });
+                            await env.openExternal(Uri.parse(url));
                         }
                         else if (this.debugConfiguration.attachOptions.action === "debugWithChrome") {
-                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔍 Debugging with Google Chrome (${this.debugConfiguration.url}).\n` } });
+                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔍 Debugging with Google Chrome (${url}).\n` } });
                             await debug.startDebugging(this.debugSession.workspaceFolder, {
                                 name: '.NET Stalker Chrome',
                                 type: 'chrome',
                                 request: 'launch',
-                                url: this.debugConfiguration.url,
+                                url: url,
                                 webRoot: this.debugConfiguration.webRoot
                             }, this.debugSession);
                         }
@@ -239,7 +246,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         const childDotNetProcessArgs = this.debugConfiguration.processOptions.args && this.debugConfiguration.processOptions.args.length > 0 ? " -- " + this.debugConfiguration.processOptions.args.join(' ') : '';
 
         const profileArg = this.debugConfiguration.processOptions.launchProfile ? `--launch-profile ${this.debugConfiguration.processOptions.launchProfile}` : '--no-launch-profile';
-        const urlsArg = !this.debugConfiguration.processOptions.launchProfile && this.debugConfiguration.url ? ` --urls=${this.debugConfiguration.url}` : '';
+        const urlsArg = !this.debugConfiguration.processOptions.launchProfile && this.debugConfiguration.url ? ` --urls="${this.debugConfiguration.url}"` : '';
         const verboseArg = this.debugConfiguration.watchOptions.verbose ? ' --verbose' : '';
 
         const commandLine = `${this.debugConfiguration.watchOptions.dotnet} watch run ${profileArg}${verboseArg}${dotNetWatchArgs} --project ${this.debugConfiguration.project}${urlsArg}${childDotNetProcessArgs}`;

@@ -1,11 +1,13 @@
-import { DebugConfigurationProvider, WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult, window } from 'vscode';
-import { execSync } from 'child_process';
-import { existsSync } from 'fs';
-import { StalkerDebugConfiguration } from './StalkerDebugConfiguration';
-import { VariableUtil } from './VariableUtil';
+import { execSync } from "child_process";
+import { existsSync } from "fs";
+import { CancellationToken, DebugConfiguration, DebugConfigurationProvider, ProviderResult, WorkspaceFolder, window } from "vscode";
+
+import { StalkerDebugConfiguration } from "./StalkerDebugConfiguration";
+import { VariableUtil } from "./VariableUtil";
 
 export class StalkerDebugConfigurationProvider implements DebugConfigurationProvider {
-    public resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: DebugConfiguration, token?: CancellationToken): ProviderResult<StalkerDebugConfiguration> {
+    // eslint-disable-next-line no-unused-vars
+    resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: DebugConfiguration, token?: CancellationToken): ProviderResult<StalkerDebugConfiguration> {
         const configuration: StalkerDebugConfiguration = debugConfiguration as StalkerDebugConfiguration;
         VariableUtil.prepareLaunchConfigVars(configuration);
         VariableUtil.expandVSCodeVarsForObject(configuration);
@@ -16,7 +18,11 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
 
         configuration.attachOptions ??= {};
         configuration.buildOptions ??= {};
+        configuration.console ??= 'integratedTerminal';
         configuration.env ??= {};
+        configuration.logging ??= {
+            moduleLoad: false
+        };
         configuration.processOptions ??= {};
         configuration.watchOptions ??= {};
 

@@ -1,5 +1,3 @@
-<p align="center">🚧 This extension is in early development. Please report any issues. 🚧</p>
-
 <p align="center" style="margin:20px 0 0 0;font-weight:bold;font-size:1.5em">.NET Stalker Debugger</p>
 <p align="center" style="margin:0 0 0 0;font-weight:bold;font-size:1.25em">3-in-1 ASP.NET (5+ and Core) debugger for Visual Studio Code</p>
 <p align="center" style="margin:0 0 20px 0;">(Replaces default debugger in launch configurations in <code>launch.json</code>)</p>
@@ -60,8 +58,6 @@ Automatically re-attaches to the project's new process (on "hot reload" builds).
     -   [TypeScript, ESLint and Webpack Configuration Files](#typescript-eslint-and-webpack-configuration-files)
     -   [Launch Configuration Modifications](#launch-configuration-modifications)
 -   [Extension Settings](#extension-settings)
--   [Known Issues](#known-issues)
--   [Release Notes / Changelog](#release-notes--changelog)
 
 # Primary Three Features
 
@@ -110,31 +106,33 @@ Logical order of phases within the three primary features.
 
 -   macOS, possibly Linux (not yet Windows)
 -   .NET SDK 6.0 or later
--   Visual Studio Code 1.80.0 or later
+-   Visual Studio Code 1.96.0 or later
 -   Visual Studio Code extensions [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
 -   Google Chrome
--   Node.js
+-   Node.js (if using TypeScript and client-side debugging)
 
 # Launch Configurations
 
 ## Properties
 
-| Property         | Type          | Description                                                                                                                                                                                                                       | Required | Default                 | Defined Values |
-| ---------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------------------- | -------------- |
-| `name`           | `string`      | Name of the launch configuration.                                                                                                                                                                                                 | Yes      |                         |                |
-| `type`           | `string`      | Type of the launch configuration. Must be `stalker`.                                                                                                                                                                              | Yes      |                         |                |
-| `request`        | `string`      | Request type of the launch configuration. Must be `launch`.                                                                                                                                                                       | Yes      |                         |                |
-| `project`        | `string`      | Path to the project file (`.csproj`).                                                                                                                                                                                             | Yes      |                         |                |
-| `process`        | `string`      | Path to the project's executable process.                                                                                                                                                                                         | Yes      |                         |                |
-| `cwd`            | `string`      | Current working directory.                                                                                                                                                                                                        |          | `${workspaceFolder}`    |                |
-| `url`            | `string`      | URL of the project.                                                                                                                                                                                                               |          | `http://localhost:5000` |                |
-| `env`            | `{[key]:any}` | Environment variables.                                                                                                                                                                                                            |          | `{}`                    |                |
-| `webRoot`        | `string`      | Path to the web root of the project (if debugging with Google Chrome).                                                                                                                                                            |          | `${workspaceFolder}`    |                |
-| `vars`           | `{[key]:any}` | Launch configuration variables. For use with other launch configuration properties. Reference only VSCode variables; do not reference other launch configuration variables. Not used directly by the extension for functionality. |          |                         |                |
-| `attachOptions`  | see below     | Options for attaching to child process started by .NET Watch.                                                                                                                                                                     |          | `{}`                    |                |
-| `buildOptions`   | see below     | Options relating to building.                                                                                                                                                                                                     |          | `{}`                    |                |
-| `processOptions` | see below     | Options for child process started by .NET Watch.                                                                                                                                                                                  |          | `{}`                    |                |
-| `watchOptions`   | see below     | Options for .NET Watch.                                                                                                                                                                                                           |          | `{}`                    |                |
+| Property         | Type          | Description                                                                                                                                                                                                                       | Required | Default                 | Defined Values                                              |
+| ---------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------------------- | ----------------------------------------------------------- |
+| `name`           | `string`      | Name of the launch configuration.                                                                                                                                                                                                 | Yes      |                         |                                                             |
+| `type`           | `string`      | Type of the launch configuration. Must be `stalker`.                                                                                                                                                                              | Yes      |                         |                                                             |
+| `request`        | `string`      | Request type of the launch configuration. Must be `launch`.                                                                                                                                                                       | Yes      |                         |                                                             |
+| `project`        | `string`      | Path to the project file (`.csproj`).                                                                                                                                                                                             | Yes      |                         |                                                             |
+| `process`        | `string`      | Path to the project's executable process.                                                                                                                                                                                         | Yes      |                         |                                                             |
+| `cwd`            | `string`      | Current working directory.                                                                                                                                                                                                        |          | `${workspaceFolder}`    |                                                             |
+| `url`            | `string`      | URL of the project.                                                                                                                                                                                                               |          | `http://localhost:5000` |                                                             |
+| `env`            | `{[key]:any}` | Environment variables.                                                                                                                                                                                                            |          | `{}`                    |                                                             |
+| `webRoot`        | `string`      | Path to the web root of the project (if debugging with Google Chrome).                                                                                                                                                            |          | `${workspaceFolder}`    |                                                             |
+| `console`        | `string`      | Console to use for debugging.                                                                                                                                                                                                     |          | `integratedTerminal`    | `internalConsole`, `integratedTerminal`, `externalTerminal` |
+| `logging`        | `{}`          | Logging to use for debugging.                                                                                                                                                                                                     |          | `{ moduleLoad: false }` |                                                             |
+| `vars`           | `{[key]:any}` | Launch configuration variables. For use with other launch configuration properties. Reference only VSCode variables; do not reference other launch configuration variables. Not used directly by the extension for functionality. |          |                         |                                                             |
+| `attachOptions`  | see below     | Options for attaching to child process started by .NET Watch.                                                                                                                                                                     |          | `{}`                    |                                                             |
+| `buildOptions`   | see below     | Options relating to building.                                                                                                                                                                                                     |          | `{}`                    |                                                             |
+| `processOptions` | see below     | Options for child process started by .NET Watch.                                                                                                                                                                                  |          | `{}`                    |                                                             |
+| `watchOptions`   | see below     | Options for .NET Watch.                                                                                                                                                                                                           |          | `{}`                    |                                                             |
 
 ### Type `attachOptions` Properties
 
@@ -144,6 +142,7 @@ Options for attaching to child process started by .NET Watch.
 | ---------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------ | ---------------------------------------------- |
 | `action`         | `string`      | Action to take when the child process is initially attached to.                                                                |          | `openExternally`                     | `nothing`, `openExternally`, `debugWithChrome` |
 | `interval`       | `number`      | Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). |          | `500`                                |                                                |
+| `urlPath`        | `string`      | URL path to open when attaching to the process.                                                                                |          | `""`                                 |                                                |
 | `taskProperties` | `{[key]:any}` | Properties for internal the Visual Studio Code attach task.                                                                    |          | `{ logging: { moduleLoad: false } }` |                                                |
 
 ### Type `buildOptions` Properties
@@ -203,7 +202,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "project": "${workspaceFolder}/src/MyWebApp/MyWebApp.csproj",
-    "process": "${workspaceFolder}/src/MyWebApp/bin/Debug/net8.0/MyWebApp",
+    "process": "${workspaceFolder}/src/MyWebApp/bin/Debug/net9.0/MyWebApp",
     "cwd": "${workspaceFolder}/src/MyWebApp",
     "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -219,7 +218,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "vars": {
-        "framework": "net8.0",
+        "framework": "net9.0",
         "projectDir": "${workspaceFolder}/src/${var:projectName}",
         "projectName": "MyWebApp"
     },
@@ -241,7 +240,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "vars": {
-        "framework": "net8.0",
+        "framework": "net9.0",
         "projectDir": "${workspaceFolder}/src/${var:projectName}",
         "projectName": "<PROJECTNAME>"
     },
@@ -273,7 +272,8 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
         ]
     },
     "attachOptions": {
-        "action": "debugWithChrome"
+        "action": "debugWithChrome",
+        "urlPath": "/swagger"
     }
 }
 ```
@@ -465,23 +465,3 @@ To disable the Webpack watch mode (i.e. no "hot transpiles" on file changes), do
 # Extension Settings
 
 There are no global/user extension settings. All settings are configured on a project-level in a `launch.json` file.
-
-# Known Issues
-
-This extension is in early development. Please report any issues.
-
-# Release Notes / Changelog
-
-#### 2024-09-09 — 0.0.3
-
--   Fixed configuration snippets.
--   Added configuration snippet that includes debugging with Google Chrome.
-
-#### 2024-07-23 — 0.0.2
-
--   Minor grammar correction.
--   Minor updates to README.md.
-
-#### 2024-07-23 — 0.0.1
-
--   First public release. Probably buggy. No pun intended.

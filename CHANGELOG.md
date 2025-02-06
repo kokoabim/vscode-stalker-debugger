@@ -1,3 +1,14 @@
+## β Beta
+
+#### 2025-02-05 — 0.1.0
+
+-   Moved to beta since the extension is stable.
+-   Added `attachOptions:urlPath` launch configuration to open a specific URL path when attaching to process, instead of a default root path.
+-   Added support for `console` and `logging` launch configurations.
+-   Added use of `net9.0` for launch configuration snippets.
+-   Updated package dependencies.
+-   Updated miscellaneous development settings.
+
 ## ⍺ Alpha
 
 #### 2024-09-09 — 0.0.3

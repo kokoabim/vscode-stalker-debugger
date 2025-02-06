@@ -5,13 +5,18 @@ export interface StalkerDebugConfiguration {
     attachOptions: {
         action?: string;
         interval?: number;
+        urlPath?: string;
         taskProperties?: { [key: string]: any };
     },
     buildOptions: {
         preBuildTasks?: PreBuildTask[];
     },
+    console: string;
     cwd: string;
     env: { [key: string]: any };
+    logging: {
+        moduleLoad?: boolean;
+    },
     name: string;
     process: string;
     processOptions: {
