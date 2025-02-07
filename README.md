@@ -1,86 +1,17 @@
-<p align="center" style="margin:20px 0 0 0;font-weight:bold;font-size:1.5em">.NET Stalker Debugger</p>
-<p align="center" style="margin:0 0 0 0;font-weight:bold;font-size:1.25em">Multiple-in-1 ASP.NET (5+ and Core) debugger for Visual Studio Code</p>
-<p align="center" style="margin:0 0 20px 0;">(Replaces default debugger in launch configurations in <code>launch.json</code>)</p>
-
 # .NET Stalker Debugger
-
-## 👨🏼‍💻 Use Cases for Engineers
-
-All use cases of .NET Stalker Debugger have all three primary features (Build, Debug and Watch/Reload) in a single debug session that is native to Visual Studio Code and its tooling.
-
-### 🔙 Backend Engineers
-
--   Example Project: C# ASP.NET Web App/API
--   Debugging Experience:
-    -   Debug/breakpoints of C# ASP.NET Web App/API
-    -   Watch, re-build and re-attach to project's new process automatically
-
-### 🌕 Full-Stack & 📄 Front-End
-
--   Example Project: C# ASP.NET Web App/API with client-side HTML/CSS and JavaScript and/or TypeScript
--   Debugging Experience:
-    -   Debug/breakpoints of C# ASP.NET Web App/API
-    -   Watch, re-build and re-attach to project's new process automatically
-    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome)
-    -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
-    -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
-
-## Many-in-1 Debug Session
-
-### 🔥 Active Hot Reloads and Transpiles
-
-Actively "hot reload" backend changes and "hot transpile" front-end changes (TypeScript to JavaScript).
-
-### 🪲 Dual-Debugging
-
-Debugging of backend and front-end (using Google Chrome's developer tool) both within Visual Studio Code simultaneously.
-
-### 🚀 Continuous Re-Attaching
-
-Automatically re-attaches to the project's new process (on "hot reload" builds).
-
-<p align="center" style="font-size:1.25em">🚫 No need to manually stop, re-attach or restart debuggers or run multiple tasks 🚫</p>
-<p align="center" style="font-size:1.25em">🎉 All in a single debug session within Visual Studio Code 🎉</p>
 
 <p align="center">
 <img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
 <span style="font-size:.85em">.NET Stalker Debugger: VS Code debug console output</span>
 </p>
 
-<p align="center">
-<img src="images/VSCode-DotNetBreakpoint.png" alt=".NET Breakpoint" width="446"/><br/>
-<span style="font-size:.85em">Backend: C#/.NET breakpoint in VS Code</span>
-</p>
+<p align="center" style="font-size:1.25em">🎉 All-in-One C# ASP.NET (5+ and Core) and JavaScript/TypeScript debug session within Visual Studio Code 🎉</p>
 
-<p align="center">
-<img src="images/VSCode-TSBreakpoint.png" alt="TypeScript Breakpoint" width="733"/><br/>
-<span style="font-size:.85em">Front-end: TypeScript breakpoint in VS Code (though running transpiled as JavaScript on client-side)</span>
-</p>
+This debugger is used instead of the default `dotnet`/`coreclr` launch configurations in `launch.json`. It provides the same debugging experience plus more in a single debug session.
 
-<p align="center">
-<img src="images/VSCode-LaunchJson.png" alt="Launch Configuration Snippets" width="446"/><br/>
-<span style="font-size:.85em">Launch configuration snippets available in <code>launch.json</code></span>
-</p>
+## Primary Three Features
 
-# Table of Contents
-
--   [Primary Three Features](#primary-three-features)
-    -   [Phases and Tooling](#phases-and-tooling)
--   [Requirements](#requirements)
--   [Launch Configurations](#launch-configurations)
-    -   [Properties](#properties)
-    -   [Examples](#examples)
--   [Client-Side JavaScript/TypeScript Debugging](#client-side-javascripttypescript-debugging)
-    -   [Google Chrome](#google-chrome)
-    -   [Node.js](#nodejs)
-    -   [Node Package Dependencies](#node-package-dependencies)
-    -   [TypeScript, ESLint and Webpack Configuration Files](#typescript-eslint-and-webpack-configuration-files)
-    -   [Launch Configuration Modifications](#launch-configuration-modifications)
--   [Extension Settings](#extension-settings)
-
-# Primary Three Features
-
-The three primary features of .NET Stalker Debugger.
+There are three primary features of .NET Stalker Debugger.
 
 1. 🛠️ <b>BUILD</b> — Build and run project
     - Lint JavaScript and TypeScript files
@@ -89,14 +20,60 @@ The three primary features of .NET Stalker Debugger.
 2. 🪲 <b>DEBUG</b> — Debug both backend and front-end
     - Attach to the .NET project process for backend debugging
     - Debug with Google Chrome's developer tools for client-side debugging
-3. ⌚️ <b>WATCH</b> — Watch for changes
+3. ⌚️ <b>WATCH-RELOAD/REBUILD-REATTACH</b> — Watch for changes
     - Watch TypeScript files to "hot transpile" to JavaScript when needed
+    - Watch other client-side files to reload browser on changes
     - Watch .NET project files to perform "hot reloads" when possible
     - Rebuild and re-attach to project's new process when a "hot reload" build is needed
 
+<p align="center" style="font-size:1.25em">🚫 No need to manually stop, re-attach or restart debuggers or run multiple tasks 🚫</p>
+
+# 👨🏼‍💻 Use Cases for Developers
+
+All use cases of .NET Stalker Debugger have [all three primary features](#primary-three-features) (Build, Debug and Watch-Reload/Rebuild-Reattach) in a single debug session that is native to Visual Studio Code and its tooling.
+
+### 🔙 Backend Developer
+
+<p align="center">
+<img src="images/VSCode-DotNetBreakpoint.png" alt=".NET Breakpoint" width="446"/><br/>
+<span style="font-size:.85em">Backend: C#/.NET breakpoint in VS Code</span>
+</p>
+
+-   Example Project: C# ASP.NET Web App/API
+-   Debug Session:
+    -   Debug/breakpoints of C# ASP.NET Web App/API
+    -   Watch, re-build and re-attach to project's new process automatically
+
+### 🌕 Full-Stack & 📄 Front-End Developers (Similar Launch Configurations)
+
+<p align="center">
+<img src="images/VSCode-TSBreakpoint.png" alt="TypeScript Breakpoint" width="733"/><br/>
+<span style="font-size:.85em">Front-end: TypeScript breakpoint in VS Code (though running transpiled as JavaScript on client-side)</span>
+</p>
+
+<p align="center">
+<img src="images/VSCode-DebugConsole-jQuery.png" alt="JS/TS Debug Console" width="290"/><br/>
+<span style="font-size:.85em">Front-end: JavaScript/TypeScript debug console in VS Code</span>
+</p>
+
+-   Example Project: C# ASP.NET Web App/API with client-side HTML/CSS and JavaScript and/or TypeScript
+-   Debug Session:
+    -   Debug/breakpoints of C# ASP.NET Web App/API
+    -   Watch, re-build and re-attach to project's new process automatically
+    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome)
+    -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
+    -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
+
+# 🕵 The .NET Stalker Debugger Life-Cycle
+
+<p align="center">
+<img src="images/VSCode-Debugger.png" alt="Debugger" width="336"/><br/>
+<span style="font-size:.85em">.NET Stalker Debugger: VS Code debugger call stack</span>
+</p>
+
 ## Phases and Tooling
 
-Logical order of phases within the three primary features.
+Logical order of phases within the [three primary features](#primary-three-features). Depending on the launch configuration, some phases may not be used.
 
 | #   | Phase     | Feature | Tooling | Description                                                                        |
 | --- | --------- | ------- | ------- | ---------------------------------------------------------------------------------- |
@@ -109,18 +86,6 @@ Logical order of phases within the three primary features.
 | 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                    |
 | 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed |
 
-## Misc Screen Shots
-
-<p align="center">
-<img src="images/VSCode-Debugger.png" alt="Debugger" width="336"/><br/>
-<span style="font-size:.85em">.NET Stalker Debugger: VS Code debugger call stack</span>
-</p>
-
-<p align="center">
-<img src="images/VSCode-DebugConsole-jQuery.png" alt="JS/TS Debug Console" width="290"/><br/>
-<span style="font-size:.85em">JavaScript/TypeScript debug console in VS Code</span>
-</p>
-
 # Requirements
 
 -   macOS, possibly Linux (not yet Windows)
@@ -131,6 +96,13 @@ Logical order of phases within the three primary features.
 -   Node.js (if using TypeScript and client-side debugging)
 
 # Launch Configurations
+
+<p align="center">
+<img src="images/VSCode-LaunchJson.png" alt="Launch Configuration Snippets" width="446"/><br/>
+<span style="font-size:.85em">Launch configuration snippets available in <code>launch.json</code></span>
+</p>
+
+When adding/modifying a launch configuration in `launch.json`, after setting `type` to `stalker` and `request` to `launch`, VS Code IntelliSense will assist in providing the necessary properties and values.
 
 ## Properties
 
