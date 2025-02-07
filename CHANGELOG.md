@@ -1,5 +1,11 @@
 ## β Beta
 
+#### 2025-02-06 — 0.1.1
+
+-   Added `launchSettingsProfile` launch configuration to root. If set, this will override `processOptions.launchSettingsProfile` and `url` launch configurations.
+-   Improved handling of `launchSettingsProfile` and `url` launch configurations.
+-   Added clearer use cases to README.md to help users understand who this extension applies to and how to use it.
+
 #### 2025-02-05 — 0.1.0
 
 -   Moved to beta since the extension is stable.

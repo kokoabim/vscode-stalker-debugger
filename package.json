@@ -1,7 +1,7 @@
 {
     "name": "stalker-debugger",
     "publisher": "spencerjames",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "displayName": ".NET Stalker Debugger",
     "shortName": "Stalker Debugger",
     "description": "Builds, runs, attaches, hot reloads, rebuilds and reattaches a .NET project, with client-side JS/TS breakpoint support. All in one debug session.",
@@ -76,117 +76,117 @@
                     "dotnet",
                     "dotnetcore"
                 ],
-				"initialConfigurations": [
-					{
-						"name": ".NET Stalker",
-						"type": "stalker",
-						"request": "launch",
-						"vars": {
-							"framework": "net9.0",
-							"projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
-							"projectName": "CHANGE_ME"
-						},
-						"project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
-						"process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
-						"cwd": "\\${var:projectDir}",
-						"url": "http://localhost:5001",
-						"env": {
-							"ASPNETCORE_ENVIRONMENT": "Development"
-						}
-					}
-				],
-				"configurationSnippets": [
-					{
-						"label": ".NET: Stalker (Minimal)",
-						"description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds.",
-						"body": {
-							"name": ".NET Stalker (Minimal)",
-							"type": "stalker",
-							"request": "launch",
-							"vars": {
-								"framework": "net9.0",
-								"projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
-								"projectName": "CHANGE_ME"
-							},
-							"project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
-							"process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
-							"cwd": "^\"\\${var:projectDir}\"",
-							"url": "http://localhost:5001",
-							"env": {
-								"ASPNETCORE_ENVIRONMENT": "Development"
-							}
-						}
-					},
-					{
-						"label": ".NET: Stalker (Debug w/ Google Chrome)",
-						"description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds. Opens the URL in Google Chrome to debug client-side code.",
-						"body": {
-							"name": ".NET Stalker (Debug w/ Google Chrome)",
-							"type": "stalker",
-							"request": "launch",
-							"vars": {
-								"framework": "net9.0",
-								"projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
-								"projectName": "CHANGE_ME"
-							},
-							"project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
-							"process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
-							"cwd": "^\"\\${var:projectDir}\"",
-							"url": "http://localhost:5001",
-							"env": {
-								"ASPNETCORE_ENVIRONMENT": "Development"
-							},
-							"webRoot": "^\"\\${var:projectDir}/wwwroot\"",
-							"attachOptions": {
-								"action": "debugWithChrome"
-							}
-						}
-					},
-					{
-						"label": ".NET: Stalker (ESLint + Webpack; Debug w/ Google Chrome)",
-						"description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds. Runs ESLint and Webpack (with watch mode) before build. Opens the URL in Google Chrome to debug client-side code.",
-						"body": {
-							"name": ".NET Stalker (Full)",
-							"type": "stalker",
-							"request": "launch",
-							"vars": {
-								"framework": "net9.0",
-								"projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
-								"projectName": "CHANGE_ME"
-							},
-							"project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
-							"process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
-							"cwd": "^\"\\${var:projectDir}\"",
-							"env": {
-								"ASPNETCORE_ENVIRONMENT": "Development",
-								"NODE_ENV": "development"
-							},
-							"url": "http://localhost:5001",
-							"webRoot": "^\"\\${var:projectDir}/wwwroot\"",
-							"buildOptions": {
-								"preBuildTasks": [
-									{
-										"name": "ESLint",
-										"commandLine": "npx eslint --ext .ts --color ./scripts",
-										"isBackground": false,
-										"waitFor": true,
-										"failOnNonZeroExitCode": true
-									},
-									{
-										"name": "Webpack",
-										"commandLine": "^\"npx webpack --watch --node-env \\${env:NODE_ENV} --mode \\${env:NODE_ENV} -d source-map --color\"",
-										"isBackground": false,
-										"waitFor": false,
-										"failOnNonZeroExitCode": true
-									}
-								]
-							},
-							"attachOptions": {
-								"action": "debugWithChrome"
-							}
-						}
-					}
-				],
+                "initialConfigurations": [
+                    {
+                        "name": ".NET Stalker",
+                        "type": "stalker",
+                        "request": "launch",
+                        "vars": {
+                            "framework": "net9.0",
+                            "projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
+                            "projectName": "CHANGE_ME"
+                        },
+                        "project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
+                        "process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
+                        "cwd": "\\${var:projectDir}",
+                        "url": "http://localhost:5001",
+                        "env": {
+                            "ASPNETCORE_ENVIRONMENT": "Development"
+                        }
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": ".NET: Stalker (Minimal)",
+                        "description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds.",
+                        "body": {
+                            "name": ".NET Stalker (Minimal)",
+                            "type": "stalker",
+                            "request": "launch",
+                            "vars": {
+                                "framework": "net9.0",
+                                "projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
+                                "projectName": "CHANGE_ME"
+                            },
+                            "project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
+                            "process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
+                            "cwd": "^\"\\${var:projectDir}\"",
+                            "url": "http://localhost:5001",
+                            "env": {
+                                "ASPNETCORE_ENVIRONMENT": "Development"
+                            }
+                        }
+                    },
+                    {
+                        "label": ".NET: Stalker (Debug w/ Google Chrome)",
+                        "description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds. Opens the URL in Google Chrome to debug client-side code.",
+                        "body": {
+                            "name": ".NET Stalker (Debug w/ Google Chrome)",
+                            "type": "stalker",
+                            "request": "launch",
+                            "vars": {
+                                "framework": "net9.0",
+                                "projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
+                                "projectName": "CHANGE_ME"
+                            },
+                            "project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
+                            "process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
+                            "cwd": "^\"\\${var:projectDir}\"",
+                            "url": "http://localhost:5001",
+                            "env": {
+                                "ASPNETCORE_ENVIRONMENT": "Development"
+                            },
+                            "webRoot": "^\"\\${var:projectDir}/wwwroot\"",
+                            "attachOptions": {
+                                "action": "debugWithChrome"
+                            }
+                        }
+                    },
+                    {
+                        "label": ".NET: Stalker (ESLint + Webpack; Debug w/ Google Chrome)",
+                        "description": "Builds, runs and watches .NET project, attaches to process, and re-attaches on hot reload builds. Runs ESLint and Webpack (with watch mode) before build. Opens the URL in Google Chrome to debug client-side code.",
+                        "body": {
+                            "name": ".NET Stalker (Full)",
+                            "type": "stalker",
+                            "request": "launch",
+                            "vars": {
+                                "framework": "net9.0",
+                                "projectDir": "^\"\\${workspaceFolder}/src/\\${var:projectName}\"",
+                                "projectName": "CHANGE_ME"
+                            },
+                            "project": "^\"\\${var:projectDir}/\\${var:projectName}.csproj\"",
+                            "process": "^\"\\${var:projectDir}/bin/Debug/\\${var:framework}/\\${var:projectName}\"",
+                            "cwd": "^\"\\${var:projectDir}\"",
+                            "env": {
+                                "ASPNETCORE_ENVIRONMENT": "Development",
+                                "NODE_ENV": "development"
+                            },
+                            "url": "http://localhost:5001",
+                            "webRoot": "^\"\\${var:projectDir}/wwwroot\"",
+                            "buildOptions": {
+                                "preBuildTasks": [
+                                    {
+                                        "name": "ESLint",
+                                        "commandLine": "npx eslint --ext .ts --color ./scripts",
+                                        "isBackground": false,
+                                        "waitFor": true,
+                                        "failOnNonZeroExitCode": true
+                                    },
+                                    {
+                                        "name": "Webpack",
+                                        "commandLine": "^\"npx webpack --watch --node-env \\${env:NODE_ENV} --mode \\${env:NODE_ENV} -d source-map --color\"",
+                                        "isBackground": false,
+                                        "waitFor": false,
+                                        "failOnNonZeroExitCode": true
+                                    }
+                                ]
+                            },
+                            "attachOptions": {
+                                "action": "debugWithChrome"
+                            }
+                        }
+                    }
+                ],
                 "configurationAttributes": {
                     "launch": {
                         "properties": {
@@ -308,9 +308,9 @@
                                         },
                                         "default": []
                                     },
-                                    "launchProfile": {
+                                    "launchSettingsProfile": {
                                         "type": "string",
-                                        "description": "Launch profile (in `Properties/launchSettings.json`) to start the child process with. If used, the `url` property is ignored.",
+                                        "description": "launch settings profile (in `Properties/launchSettings.json`) to start the child process with. If used, the `url` property is ignored. Ignored if `launchSettingsProfile` is used.",
                                         "default": ""
                                     }
                                 },
@@ -329,7 +329,7 @@
                             },
                             "url": {
                                 "type": "string",
-                                "description": "Local URL and port to listen on. Default is `http://localhost:5001`. Ignored if `processOptions.launchProfile` is used.",
+                                "description": "Local URL and port to listen on. Supports HTTPS as well as multiple URLs delimited by a semi-colon. Default is `http://localhost:5001`. Ignored if `launchSettingsProfile` or `processOptions.launchSettingsProfile` is used.",
                                 "default": "http://localhost:5001"
                             },
                             "vars": {
@@ -371,7 +371,7 @@
                                     },
                                     "doNotLaunchBrowser": {
                                         "type": "boolean",
-                                        "description": "Do not launch the browser if the `launchProfile` property is used and is configured to do so. Ignored if `processOptions.action` is not `nothing`.",
+                                        "description": "Do not launch the browser if the `launchSettingsProfile` property is used and is configured to do so. Ignored if `processOptions.action` is not `nothing`.",
                                         "default": false
                                     },
                                     "doNotRefreshBrowser": {
@@ -438,6 +438,11 @@
                                     "Use the integrated terminal",
                                     "Use an external terminal"
                                 ]
+                            },
+                            "launchSettingsProfile": {
+                                "type": "string",
+                                "description": "launch settings profile (in `Properties/launchSettings.json`) to start the child process with. If used, `processOptions.launchSettingsProfile` and `url` properties are ignored.",
+                                "default": ""
                             }
                         },
                         "required": [

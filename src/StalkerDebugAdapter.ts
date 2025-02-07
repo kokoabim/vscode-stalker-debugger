@@ -1,4 +1,4 @@
-import { Disposable, DebugAdapter, DebugProtocolMessage, Event, EventEmitter, TaskExecution, DebugSession, tasks, debug, ShellExecution, TaskScope, Task, env, Uri, TaskProcessEndEvent } from 'vscode';
+import { Disposable, DebugAdapter, DebugProtocolMessage, Event, EventEmitter, TaskExecution, DebugSession, tasks, debug, ShellExecution, TaskScope, Task, env, Uri, TaskProcessEndEvent, workspace, WorkspaceFolder } from 'vscode';
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { StalkerDebugConfiguration } from './StalkerDebugConfiguration';
 import findProcesses from 'find-process';
@@ -25,9 +25,11 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
     private dotNetWatchTask: TaskExecution | undefined;
     private preBuildTasks: { [name: string]: PreBuildTaskExecution } = {};
     private responseSeq = 0;
+    private workspaceFolder: WorkspaceFolder | undefined;
 
     constructor(private readonly debugSession: DebugSession) {
         this.debugConfiguration = debugSession.configuration as StalkerDebugConfiguration;
+        this.workspaceFolder = debugSession.workspaceFolder;
 
         const projectFileName = this.debugConfiguration.project.split('/').pop();
         if (!projectFileName) throw new Error('projectToWatch is not valid');
@@ -84,6 +86,34 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
             success: true,
             body: {}
         };
+    }
+
+    private async getLaunchUrls(): Promise<string[]> {
+        const launchProfile = await this.getLaunchSettingsProfile(this.debugConfiguration.cwd.replace(this.workspaceFolder!.uri.fsPath + "/", ""), this.debugConfiguration.launchSettingsProfile || this.debugConfiguration.processOptions.launchSettingsProfile);
+
+        return (launchProfile ? launchProfile.applicationUrl?.split(";") : undefined)
+            ?? (this.debugConfiguration.url ? [this.debugConfiguration.url] : []);
+    }
+
+    private async getLaunchSettingsProfile(projectDirectory: string, launchSettingsProfile: string | undefined, profileType = "Project"): Promise<{ [key: string]: any } | undefined> {
+        if (!launchSettingsProfile) return undefined;
+
+        const launchSettingsFiles = await workspace.findFiles(`${projectDirectory}/**/Properties/launchSettings.json`);
+        if (launchSettingsFiles.length !== 1) return undefined;
+
+        let launchSettings: { [key: string]: any } = {};
+        try {
+            const fileData = await workspace.fs.readFile(launchSettingsFiles[0]);
+            const fileContents = Buffer.from(fileData).toString("utf8");
+            launchSettings = JSON.parse(fileContents);
+            if (launchSettings?.profiles === undefined) return undefined;
+        }
+        catch (e) {
+            throw new Error(`Failed to read launchSettings.json: ${e}`);
+        }
+
+        const foundProfileName = Object.keys(launchSettings.profiles).find(p => p === launchSettingsProfile && launchSettings.profiles[p].commandName === profileType);
+        return foundProfileName ? launchSettings.profiles[foundProfileName] as { [key: string]: any } : undefined;
     }
 
     private handleOnDidChangeActiveDebugSession(e: DebugSession | undefined): void {
@@ -196,9 +226,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     this.attachedIncrement++;
                     this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔗 Attached to child process (${this.attachedIncrement}).\n` } });
 
-                    if (this.attachedIncrement === 1 && this.debugConfiguration.attachOptions.action && this.debugConfiguration.attachOptions.action !== "nothing" && this.debugConfiguration.url) {
-                        let url = this.debugConfiguration.url.replaceAll("0.0.0.0", "localhost").split(";")[0].trim().replace(/\/+$/, '');
+                    const launchUrls = await this.getLaunchUrls();
 
+                    if (this.attachedIncrement === 1 && this.debugConfiguration.attachOptions.action && this.debugConfiguration.attachOptions.action !== "nothing" && launchUrls.length > 0) {
+                        let url = launchUrls[0].replace("0.0.0.0", "localhost");
                         let urlPath = this.debugConfiguration.attachOptions.urlPath?.trim().replace(/^\/+/, '');
                         if (urlPath) url += `/${urlPath}`;
 
@@ -245,9 +276,14 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         const dotNetWatchArgs = this.debugConfiguration.watchOptions.args && this.debugConfiguration.watchOptions.args.length > 0 ? ` ${this.debugConfiguration.watchOptions.args.map(a => `--property ${a}`).join(' ')}` : '';
         const childDotNetProcessArgs = this.debugConfiguration.processOptions.args && this.debugConfiguration.processOptions.args.length > 0 ? " -- " + this.debugConfiguration.processOptions.args.join(' ') : '';
 
-        const profileArg = this.debugConfiguration.processOptions.launchProfile ? `--launch-profile ${this.debugConfiguration.processOptions.launchProfile}` : '--no-launch-profile';
-        const urlsArg = !this.debugConfiguration.processOptions.launchProfile && this.debugConfiguration.url ? ` --urls="${this.debugConfiguration.url}"` : '';
-        const verboseArg = this.debugConfiguration.watchOptions.verbose ? ' --verbose' : '';
+        let profileArg = "--no-launch-profile";
+        if (this.debugConfiguration.launchSettingsProfile) profileArg = `--launch-profile ${this.debugConfiguration.launchSettingsProfile}`;
+        else if (this.debugConfiguration.processOptions.launchSettingsProfile) profileArg = `--launch-profile ${this.debugConfiguration.processOptions.launchSettingsProfile}`;
+
+        const urls = await this.getLaunchUrls();
+        const urlsArg = urls.length > 0 ? ` --urls="${urls.join(";")}"` : "";
+
+        const verboseArg = this.debugConfiguration.watchOptions.verbose ? ' --verbose' : "";
 
         const commandLine = `${this.debugConfiguration.watchOptions.dotnet} watch run ${profileArg}${verboseArg}${dotNetWatchArgs} --project ${this.debugConfiguration.project}${urlsArg}${childDotNetProcessArgs}`;
         const shellExec = new ShellExecution(commandLine, { cwd: this.debugConfiguration.cwd, env: this.debugConfiguration.env });

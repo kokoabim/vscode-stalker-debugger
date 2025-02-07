@@ -11,17 +11,18 @@ export interface StalkerDebugConfiguration {
     buildOptions: {
         preBuildTasks?: PreBuildTask[];
     },
-    console: string;
+    console?: string;
     cwd: string;
     env: { [key: string]: any };
-    logging: {
+    launchSettingsProfile?: string;
+    logging?: {
         moduleLoad?: boolean;
     },
     name: string;
     process: string;
     processOptions: {
         args?: string[];
-        launchProfile?: string;
+        launchSettingsProfile?: string;
     },
     project: string;
     request: string;

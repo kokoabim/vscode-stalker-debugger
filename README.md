@@ -1,12 +1,31 @@
 <p align="center" style="margin:20px 0 0 0;font-weight:bold;font-size:1.5em">.NET Stalker Debugger</p>
-<p align="center" style="margin:0 0 0 0;font-weight:bold;font-size:1.25em">3-in-1 ASP.NET (5+ and Core) debugger for Visual Studio Code</p>
+<p align="center" style="margin:0 0 0 0;font-weight:bold;font-size:1.25em">Multiple-in-1 ASP.NET (5+ and Core) debugger for Visual Studio Code</p>
 <p align="center" style="margin:0 0 20px 0;">(Replaces default debugger in launch configurations in <code>launch.json</code>)</p>
 
 # .NET Stalker Debugger
 
-### 🛠️ Typical Dev Stack
+## 👨🏼‍💻 Use Cases for Engineers
 
-Full-stack development. Backend of a C# ASP.NET Web App/API project and front-end client-side HTML, CSS, JavaScript (transpiled from TypeScript), etc.
+All use cases of .NET Stalker Debugger have all three primary features (Build, Debug and Watch/Reload) in a single debug session that is native to Visual Studio Code and its tooling.
+
+### 🔙 Backend Engineers
+
+-   Example Project: C# ASP.NET Web App/API
+-   Debugging Experience:
+    -   Debug/breakpoints of C# ASP.NET Web App/API
+    -   Watch, re-build and re-attach to project's new process automatically
+
+### 🌕 Full-Stack & 📄 Front-End
+
+-   Example Project: C# ASP.NET Web App/API with client-side HTML/CSS and JavaScript and/or TypeScript
+-   Debugging Experience:
+    -   Debug/breakpoints of C# ASP.NET Web App/API
+    -   Watch, re-build and re-attach to project's new process automatically
+    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome)
+    -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
+    -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
+
+## Many-in-1 Debug Session
 
 ### 🔥 Active Hot Reloads and Transpiles
 
@@ -123,7 +142,7 @@ Logical order of phases within the three primary features.
 | `project`        | `string`      | Path to the project file (`.csproj`).                                                                                                                                                                                             | Yes      |                         |                                                             |
 | `process`        | `string`      | Path to the project's executable process.                                                                                                                                                                                         | Yes      |                         |                                                             |
 | `cwd`            | `string`      | Current working directory.                                                                                                                                                                                                        |          | `${workspaceFolder}`    |                                                             |
-| `url`            | `string`      | URL of the project.                                                                                                                                                                                                               |          | `http://localhost:5000` |                                                             |
+| `url`            | `string`      | URL of the project.                                                                                                                                                                                                               |          | `http://localhost:5001` |                                                             |
 | `env`            | `{[key]:any}` | Environment variables.                                                                                                                                                                                                            |          | `{}`                    |                                                             |
 | `webRoot`        | `string`      | Path to the web root of the project (if debugging with Google Chrome).                                                                                                                                                            |          | `${workspaceFolder}`    |                                                             |
 | `console`        | `string`      | Console to use for debugging.                                                                                                                                                                                                     |          | `integratedTerminal`    | `internalConsole`, `integratedTerminal`, `externalTerminal` |
@@ -167,26 +186,26 @@ Options relating to building.
 
 Options for child process started by .NET Watch.
 
-| Property        | Type     | Description                                                                                                                   | Required | Default | Defined Values |
-| --------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | -------------- |
-| `args`          | `array`  | Arguments passed to the child process.                                                                                        |          | `[]`    |                |
-| `launchProfile` | `string` | Launch profile (in `Properties/launchSettings.json`) to start the child process with. If used, the `url` property is ignored. |          |         |                |
+| Property                | Type     | Description                                                                                                                            | Required | Default | Defined Values |
+| ----------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | -------------- |
+| `args`                  | `array`  | Arguments passed to the child process.                                                                                                 |          | `[]`    |                |
+| `launchSettingsProfile` | `string` | launch settings profile (in `Properties/launchSettings.json`) to start the child process with. If used, the `url` property is ignored. |          |         |                |
 
 ### Type `watchOptions` Properties
 
 Options for .NET Watch.
 
-| Property                | Type      | Description                                                                                                                                                       | Required | Default  | Defined Values |
-| ----------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- | -------------- |
-| `args`                  | `array`   | Arguments passed to .NET Watch.                                                                                                                                   |          | `[]`     |                |
-| `disableOptimizations`  | `boolean` | Disable MSBuild optimizations.                                                                                                                                    |          | `false`  |                |
-| `doNotLaunchBrowser`    | `boolean` | Do not launch the browser if the `processOptions.launchProfile` property is used and is configured to do so. Ignored if `processOptions.action` is not `nothing`. |          | `false`  |                |
-| `doNotRefreshBrowser`   | `boolean` | "Do not refresh the browser when changes are detected.                                                                                                            |          | `false`  |                |
-| `dotnet`                | `string`  | Path to the dotnet executable.                                                                                                                                    |          | `dotnet` |                |
-| `interval`              | `number`  | Interval in milliseconds to check if child process has restarted, after a hot load build, to re-attach to it.                                                     |          | `1000`   |                |
-| `noEmojis`              | `boolean` | Disable emojis in the console output.                                                                                                                             |          | `false`  |                |
-| `usePollingFileWatcher` | `boolean` | Use polling file watcher. This is required for some file systems, such as network shares, Docker mounted volumes, and other virtual file systems.                 |          | `false`  |                |
-| `verbose`               | `boolean` | Enable verbose logging for .NET Watch.                                                                                                                            |          | `false`  |                |
+| Property                | Type      | Description                                                                                                                                                               | Required | Default  | Defined Values |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- | -------------- |
+| `args`                  | `array`   | Arguments passed to .NET Watch.                                                                                                                                           |          | `[]`     |                |
+| `disableOptimizations`  | `boolean` | Disable MSBuild optimizations.                                                                                                                                            |          | `false`  |                |
+| `doNotLaunchBrowser`    | `boolean` | Do not launch the browser if the `processOptions.launchSettingsProfile` property is used and is configured to do so. Ignored if `processOptions.action` is not `nothing`. |          | `false`  |                |
+| `doNotRefreshBrowser`   | `boolean` | "Do not refresh the browser when changes are detected.                                                                                                                    |          | `false`  |                |
+| `dotnet`                | `string`  | Path to the dotnet executable.                                                                                                                                            |          | `dotnet` |                |
+| `interval`              | `number`  | Interval in milliseconds to check if child process has restarted, after a hot load build, to re-attach to it.                                                             |          | `1000`   |                |
+| `noEmojis`              | `boolean` | Disable emojis in the console output.                                                                                                                                     |          | `false`  |                |
+| `usePollingFileWatcher` | `boolean` | Use polling file watcher. This is required for some file systems, such as network shares, Docker mounted volumes, and other virtual file systems.                         |          | `false`  |                |
+| `verbose`               | `boolean` | Enable verbose logging for .NET Watch.                                                                                                                                    |          | `false`  |                |
 
 If the browser is not refreshing on detected changes, see the `usePollingFileWatcher` property and [dotnet-watch browser refresh](https://learn.microsoft.com/en-us/aspnet/core/tutorials/dotnet-watch#browser-refresh).
 

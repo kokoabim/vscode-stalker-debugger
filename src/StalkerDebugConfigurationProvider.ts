@@ -16,9 +16,10 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
         else if (!configuration.project) return window.showInformationMessage("No project to build, run and watch").then(_ => undefined);
         else if (!configuration.process) return window.showInformationMessage("No process to attach to").then(_ => undefined);
 
+        configuration.console ??= 'integratedTerminal';
+
         configuration.attachOptions ??= {};
         configuration.buildOptions ??= {};
-        configuration.console ??= 'integratedTerminal';
         configuration.env ??= {};
         configuration.logging ??= {
             moduleLoad: false
@@ -30,7 +31,7 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
         if (!configuration.watchOptions.dotnet) return window.showInformationMessage("Failed to locate dotnet executable").then(_ => undefined);
 
         if (configuration.watchOptions.disableOptimizations) configuration.env.DOTNET_WATCH_SUPPRESS_MSBUILD_INCREMENTALISM = '1';
-        if (configuration.watchOptions.doNotLaunchBrowser || (configuration.processOptions.launchProfile && configuration.attachOptions.action && configuration.attachOptions.action !== 'nothing')) configuration.env.DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER = '1';
+        if (configuration.watchOptions.doNotLaunchBrowser || (configuration.processOptions.launchSettingsProfile && configuration.attachOptions.action && configuration.attachOptions.action !== 'nothing')) configuration.env.DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER = '1';
         if (configuration.watchOptions.doNotRefreshBrowser) configuration.env.DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH = '1';
         if (configuration.watchOptions.noEmojis) configuration.env.DOTNET_WATCH_SUPPRESS_EMOJIS = '1';
         if (configuration.watchOptions.usePollingFileWatcher) configuration.env.DOTNET_USE_POLLING_FILE_WATCHER = '1';
