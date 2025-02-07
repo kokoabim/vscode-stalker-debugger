@@ -1,5 +1,9 @@
 ## β Beta
 
+#### 2025-02-06 — 0.1.2
+
+- Improved README.md (again).
+
 #### 2025-02-06 — 0.1.1
 
 -   Added `launchSettingsProfile` launch configuration to root. If set, this will override `processOptions.launchSettingsProfile` and `url` launch configurations.
