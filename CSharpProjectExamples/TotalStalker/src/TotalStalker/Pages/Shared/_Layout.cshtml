@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/common.css" rel="stylesheet" asp-append-version="true" />
+
+    @await RenderSectionAsync("Head", required: false)
+</head>
+
+<body>
+    @RenderBody()
+
+    <script>var exports = {};</script>
+    <script src="~/js/common.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

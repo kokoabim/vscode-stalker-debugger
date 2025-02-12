@@ -1,9 +1,13 @@
 {
     "files.exclude": {
-        "dist": false
+        "dist": false,
+        "**/bin/": true,
+        "**/obj/": true
     },
     "search.exclude": {
-        "dist": true
+        "dist": true,
+        "**/bin/": true,
+        "**/obj/": true
     },
     "cSpell.words": [
         "copyfiles",

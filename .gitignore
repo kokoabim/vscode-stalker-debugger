@@ -2,5 +2,8 @@
 .vscode-test/
 dist/
 lib/
-node_modules/
+**/node_modules/
 releases/
+
+CSharpProjectExamples/**/bin/
+CSharpProjectExamples/**/obj/

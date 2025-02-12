@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "noEmitOnError": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "outDir": "./wwwroot/js",
+        "esModuleInterop": true,
+        "target": "ESNext",
+        "module": "commonjs",
+        "allowJs": true,
+        "checkJs": true,
+    },
+    "exclude": [
+        "./node_modules/",
+        "./wwwroot/",
+        "./webpack.config.ts"
+    ],
+    "include": [
+        "./scripts/**/*.ts"
+    ],
+    "compileOnSave": true,
+}
