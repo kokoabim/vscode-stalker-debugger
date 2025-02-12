@@ -1,8 +1,12 @@
 ## β Beta
 
+#### 2025-02-11 — 0.1.3
+
+-   Improved Webpack Watch pre-build task.
+
 #### 2025-02-06 — 0.1.2
 
-- Improved README.md (again).
+-   Improved README.md (again).
 
 #### 2025-02-06 — 0.1.1
 

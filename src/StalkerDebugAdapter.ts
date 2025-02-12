@@ -3,7 +3,7 @@ import { DebugProtocol } from '@vscode/debugprotocol';
 import { StalkerDebugConfiguration } from './StalkerDebugConfiguration';
 import findProcesses from 'find-process';
 
-export type PreBuildTask = { name: string, commandLine: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean };
+export type PreBuildTask = { name: string, commandLine: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean, problemMatcher?: any };
 export type PreBuildTaskExecution = { definition: PreBuildTask, task: TaskExecution | undefined, hasEnded?: boolean, exitCode?: number | undefined; };
 
 export class StalkerDebugAdapter implements Disposable, DebugAdapter {
@@ -304,6 +304,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
         const task = new Task({ type: 'process' }, TaskScope.Workspace, `.NET Stalker Task: ${preBuildTask.name}`, '.NET Stalker', shellExec);
         task.isBackground = preBuildTask.isBackground ?? false;
+        if (preBuildTask.problemMatcher) task.problemMatchers = [preBuildTask.problemMatcher];
 
         this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔨 Starting pre-build task: ${preBuildTask.name}\n` } });
 
@@ -320,6 +321,11 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
         for (const preBuildTask of this.debugConfiguration.buildOptions.preBuildTasks!) {
             if (this.debuggerIsStopping) return false;
+
+            // set defaults
+            if (preBuildTask.failOnNonZeroExitCode === undefined) preBuildTask.failOnNonZeroExitCode = true;
+            if (preBuildTask.isBackground === undefined) preBuildTask.isBackground = false;
+            if (preBuildTask.waitFor === undefined) preBuildTask.waitFor = true;
 
             const startPreBuildTaskResult = await this.startPreBuildTask(preBuildTask);
             if (preBuildTask.waitFor && preBuildTask.failOnNonZeroExitCode && startPreBuildTaskResult !== 0) return false; // ! full stop is handled in `tasks.onDidEndTaskProcess` in constructor

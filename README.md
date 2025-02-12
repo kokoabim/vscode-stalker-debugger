@@ -117,7 +117,7 @@ When adding/modifying a launch configuration in `launch.json`, after setting `ty
 | `url`            | `string`      | URL of the project.                                                                                                                                                                                                               |          | `http://localhost:5001` |                                                             |
 | `env`            | `{[key]:any}` | Environment variables.                                                                                                                                                                                                            |          | `{}`                    |                                                             |
 | `webRoot`        | `string`      | Path to the web root of the project (if debugging with Google Chrome).                                                                                                                                                            |          | `${workspaceFolder}`    |                                                             |
-| `console`        | `string`      | Console to use for debugging.                                                                                                                                                                                                     |          | `integratedTerminal`    | `internalConsole`, `integratedTerminal`, `externalTerminal` |
+| `console`        | `string`      | Console to use for debugging.                                                                                                                                                                                                     |          | `internalConsole`       | `internalConsole`, `integratedTerminal`, `externalTerminal` |
 | `logging`        | `{}`          | Logging to use for debugging.                                                                                                                                                                                                     |          | `{ moduleLoad: false }` |                                                             |
 | `vars`           | `{[key]:any}` | Launch configuration variables. For use with other launch configuration properties. Reference only VSCode variables; do not reference other launch configuration variables. Not used directly by the extension for functionality. |          |                         |                                                             |
 | `attachOptions`  | see below     | Options for attaching to child process started by .NET Watch.                                                                                                                                                                     |          | `{}`                    |                                                             |
@@ -152,7 +152,8 @@ Options relating to building.
 | `commandLine`           | `string`  | Command line to run.                                                     | Yes      |         |                |
 | `isBackground`          | `boolean` | Indicate whether the task is a background task or not.                   |          | `false` |                |
 | `waitFor`               | `boolean` | Indicate whether to wait for the task to complete before continuing.     |          | `true`  |                |
-| `failOnNonZeroExitCode` | `boolean` | Indicate whether to fail the build if the task has a non-zero exit code. |          | `false` |                |
+| `failOnNonZeroExitCode` | `boolean` | Indicate whether to fail the build if the task has a non-zero exit code. |          | `true`  |                |
+| `problemMatcher`        | `string`  | Problem matcher to use for the task.                                     |          |         |                |
 
 ### Type `processOptions` Properties
 
@@ -248,17 +249,14 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
         "preBuildTasks": [
             {
                 "name": "ESLint",
-                "commandLine": "npx eslint --ext .ts --color ./scripts",
-                "isBackground": false,
-                "waitFor": true,
-                "failOnNonZeroExitCode": true
+                "commandLine": "npx eslint --color ./scripts"
             },
             {
                 "name": "Webpack",
-                "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} -d source-map --color",
-                "isBackground": false,
+                "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} --devtool source-map --color",
+                "isBackground": true,
                 "waitFor": false,
-                "failOnNonZeroExitCode": true
+                "problemMatcher": "$stalker-webpack-watch"
             }
         ]
     },
@@ -298,7 +296,8 @@ See [Node.js](https://nodejs.org/) for installation.
 In the project directory (i.e. `${workspaceFolder}/src/(projectName)`), run:
 
 ```bash
-npm i --save-dev @types/glob @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint path ts-loader ts-node typescript webpack webpack-cli
+npm i --save-dev @types/bootstrap @types/glob @types/jquery @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint glob path ts-loader ts-node typescript webpack webpack-cli
+npm i --save @popperjs/core bootstrap jquery
 ```
 
 ## TypeScript, ESLint and Webpack Configuration Files
@@ -320,36 +319,62 @@ An noteworthy values here is `compilerOptions.outDir` which is referenced by the
         "target": "ESNext",
         "module": "commonjs",
         "allowJs": true,
-        "checkJs": true,
-        "types": ["node"]
+        "checkJs": true
     },
-    "exclude": ["./node_modules", "./wwwroot"],
-    "include": ["**/*.ts"],
+    "exclude": ["./node_modules/", "./wwwroot/", "./webpack.config.ts"],
+    "include": ["./scripts/**/*.ts"],
     "compileOnSave": true
 }
 ```
 
 ### ESLint Files
 
-`${workspaceFolder}/src/(projectName)/.eslintrc`
+`${workspaceFolder}/src/(projectName)/eslint.config.mjs`
 
-```json
-{
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "rules": {}
-}
+```mjs
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+
+export default [
+    {
+        files: ["**/*.ts"],
+
+        ignores: ["./node_modules/**"],
+    },
+    {
+        plugins: {
+            "@typescript-eslint": typescriptEslint,
+        },
+
+        languageOptions: {
+            parser: tsParser,
+            ecmaVersion: 2022,
+            sourceType: "module",
+        },
+
+        rules: {
+            "@typescript-eslint/naming-convention": [
+                "warn",
+                {
+                    selector: "import",
+                    format: ["camelCase", "PascalCase"],
+                },
+            ],
+            curly: ["warn", "multi-line"],
+            eqeqeq: "warn",
+            "no-throw-literal": "warn",
+            semi: "warn",
+            "no-unused-vars": "warn",
+            "no-unreachable": "warn",
+            "no-unused-expressions": "warn",
+        },
+    },
+];
 ```
 
 `${workspaceFolder}/src/(projectName)/.eslintignore`
 
-```
+```plaintext
 **/node_modules/*
 **/webpack.config.ts
 **/wwwroot/js/*
@@ -362,13 +387,14 @@ Two noteworthy values here are `entry` and `output.path` which are used to trans
 `${workspaceFolder}/src/(projectName)/webpack.config.ts`
 
 ```typescript
-import glob from "glob";
+import { glob } from "glob";
 import { resolve } from "path";
 import { Configuration } from "webpack";
 
 const config: Configuration = {
     entry: glob.sync("./scripts/**/*.ts").reduce((entries, path) => {
-        const entry = path.replace("./scripts/", "").replace(".ts", "");
+        const entry = path.replace(/(.*\/)?scripts\//, "").replace(".ts", "");
+        path = "./" + path;
         entries[entry] = path;
         return entries;
     }, {} as { [key: string]: string }),
@@ -377,6 +403,7 @@ const config: Configuration = {
         filename: "[name].js",
         devtoolModuleFilenameTemplate: "[absolute-resource-path]",
     },
+    infrastructureLogging: { level: "log" },
     devtool: "source-map",
     target: "web",
     resolve: {
@@ -413,10 +440,7 @@ Editing an existing .NET Stalker Debugger launch configuration, append to root l
     "preBuildTasks": [
         {
             "name": "ESLint",
-            "commandLine": "npx eslint --ext .ts --color ./scripts",
-            "isBackground": false,
-            "waitFor": true,
-            "failOnNonZeroExitCode": true
+            "commandLine": "npx eslint --color ./scripts",
         }
     ]
 }
@@ -439,19 +463,16 @@ As well as:
     "preBuildTasks": [
         {
             "name": "Webpack",
-            "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} -d source-map --color",
-            "isBackground": false,
+            "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} --devtool source-map --color",
+            "isBackground": true,
             "waitFor": false,
-            "failOnNonZeroExitCode": true
+            "problemMatcher": "$stalker-webpack-watch"
         }
     ]
 }
 ```
 
-To disable the Webpack watch mode (i.e. no "hot transpiles" on file changes), do the following:
-
-1. Remove `--watch` from the `commandLine` property
-2. Set `waitFor` to `true`
+To disable the Webpack watch mode (i.e. no "hot transpiles" on file changes), remove `--watch` from the `commandLine` property.
 
 # Extension Settings
 

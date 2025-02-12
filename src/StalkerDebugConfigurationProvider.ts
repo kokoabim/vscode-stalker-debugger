@@ -16,7 +16,7 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
         else if (!configuration.project) return window.showInformationMessage("No project to build, run and watch").then(_ => undefined);
         else if (!configuration.process) return window.showInformationMessage("No process to attach to").then(_ => undefined);
 
-        configuration.console ??= 'integratedTerminal';
+        configuration.console ??= 'internalConsole';
 
         configuration.attachOptions ??= {};
         configuration.buildOptions ??= {};
