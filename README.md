@@ -9,7 +9,17 @@
 
 This debugger is used instead of the default `dotnet`/`coreclr` launch configurations in `launch.json`. It provides the same debugging experience plus more in a single debug session.
 
-## Primary Three Features
+# TL;DR
+
+1. Install this extension
+2. Check out the [example C# project](https://github.com/kokoabim/vscode-stalker-debugger/tree/main/CSharpProjectExamples/TotalStalker) and its use of:
+    - VS Code launch configuration `.NET Stalker` in `.vscode/launch.json`
+    - TypeScript, ESLint and Webpack configuration files
+3. Set breakpoint in jQuery document-ready function of `src/TotalStalker/scripts/common.ts` (to demonstrate client-side debugging)
+4. Set breakpoint in `OnGet()` method of `src/TotalStalker/Pages/Index.cshtml.cs` (to demonstrate backend debugging)
+5. Debug with `.NET Stalker` launch configuration 🚀
+
+# Primary Three Features
 
 There are three primary features of .NET Stalker Debugger.
 
