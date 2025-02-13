@@ -32,11 +32,11 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         this.workspaceFolder = debugSession.workspaceFolder;
 
         const projectFileName = this.debugConfiguration.project.split('/').pop();
-        if (!projectFileName) throw new Error('projectToWatch is not valid');
+        if (!projectFileName) throw new Error('project is not valid');
         this.projectFileName = projectFileName;
 
         const processFileName = this.debugConfiguration.process.split('/').pop();
-        if (!processFileName) throw new Error('processToAttach is not valid');
+        if (!processFileName) throw new Error('process is not valid');
         this.processFileName = processFileName;
 
         this.disposables.push(debug.onDidStartDebugSession(e => this.handleOnDidStartDebugSession(e)));
@@ -239,13 +239,24 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                         }
                         else if (this.debugConfiguration.attachOptions.action === "debugWithChrome") {
                             this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔍 Debugging with Google Chrome (${url}).\n` } });
-                            await debug.startDebugging(this.debugSession.workspaceFolder, {
-                                name: '.NET Stalker Chrome',
-                                type: 'chrome',
-                                request: 'launch',
-                                url: url,
-                                webRoot: this.debugConfiguration.webRoot
-                            }, this.debugSession);
+
+                            try {
+                                const didStartDebug = await debug.startDebugging(this.debugSession.workspaceFolder, {
+                                    name: '.NET Stalker Chrome',
+                                    type: 'chrome',
+                                    request: 'launch',
+                                    url: url,
+                                    webRoot: this.debugConfiguration.webRoot
+                                }, this.debugSession);
+
+
+                                if (!didStartDebug) {
+                                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Google Chrome.\n` } });
+                                }
+                            }
+                            catch (e) {
+                                this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Google Chrome: ${e}\n` } });
+                            }
                         }
                     }
                 }
