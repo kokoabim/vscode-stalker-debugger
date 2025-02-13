@@ -1,5 +1,9 @@
 ## β Beta
 
+#### 2025-02-13 — 0.2.0
+
+-   Added changes to ensure support on Linux and Windows. (Tested on Ubuntu 24.04 and Windows 11.)
+
 #### 2025-02-11 — 0.1.4
 
 -   Updated README.md with _TL;DR_ section to reference example C# project.

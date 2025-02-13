@@ -98,7 +98,8 @@ Logical order of phases within the [three primary features](#primary-three-featu
 
 # Requirements
 
--   macOS, possibly Linux (not yet Windows)
+Works on modern versions of linux (Ubuntu), macOS and Windows, where the following can be installed:
+
 -   .NET SDK 6.0 or later
 -   Visual Studio Code 1.96.0 or later
 -   Visual Studio Code extensions [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
