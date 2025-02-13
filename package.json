@@ -263,13 +263,16 @@
                                             "properties": {
                                                 "name": {
                                                     "type": "string",
-                                                    "description": "Name of the task to run.",
-                                                    "default": ""
+                                                    "description": "Name of the task to run."
                                                 },
                                                 "commandLine": {
                                                     "type": "string",
-                                                    "description": "Command line to run.",
-                                                    "default": ""
+                                                    "description": "Command line to run."
+                                                },
+                                                "cwd": {
+                                                    "type": "string",
+                                                    "description": "Path to the working directory of the task. Default is launch configuration `cwd` or current workspace.",
+                                                    "default": null
                                                 },
                                                 "isBackground": {
                                                     "type": "boolean",
@@ -288,8 +291,7 @@
                                                 },
                                                 "problemMatcher": {
                                                     "type": "string",
-                                                    "description": "Problem matcher to use for the task. Default is empty.",
-                                                    "default": ""
+                                                    "description": "Problem matcher to use for the task."
                                                 }
                                             },
                                             "required": [

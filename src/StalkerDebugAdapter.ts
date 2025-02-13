@@ -4,7 +4,7 @@ import { StalkerDebugConfiguration } from './StalkerDebugConfiguration';
 import findProcesses from 'find-process';
 import { EnvironmentUtil } from './EnvironmentUtil';
 
-export type PreBuildTask = { name: string, commandLine: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean, problemMatcher?: any };
+export type PreBuildTask = { name: string, commandLine: string, cwd?: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean, problemMatcher?: any };
 export type PreBuildTaskExecution = { definition: PreBuildTask, task: TaskExecution | undefined, hasEnded?: boolean, exitCode?: number | undefined; };
 
 export class StalkerDebugAdapter implements Disposable, DebugAdapter {
@@ -309,7 +309,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
      * @returns If task is waited for and has ended, the exit code if the task completed or undefined if it was terminated. If task is not waited for, false.
      */
     private async startPreBuildTask(preBuildTask: PreBuildTask): Promise<number | false | undefined> {
-        const shellExec = new ShellExecution(preBuildTask.commandLine, { cwd: this.debugConfiguration.cwd, env: this.debugConfiguration.env });
+        const shellExec = new ShellExecution(preBuildTask.commandLine, { cwd: preBuildTask.cwd ?? this.debugConfiguration.cwd, env: this.debugConfiguration.env });
 
         const task = new Task({ type: 'process' }, TaskScope.Workspace, `.NET Stalker Task: ${preBuildTask.name}`, '.NET Stalker', shellExec);
         task.isBackground = preBuildTask.isBackground ?? false;
