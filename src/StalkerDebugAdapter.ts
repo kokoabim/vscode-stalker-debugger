@@ -169,8 +169,8 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
             const dotNetWatchProcesses = await findProcesses("name", dotNetWatchProcessNameRegExp);
             const dotNetWatchProcess = dotNetWatchProcesses.length === 1 ? dotNetWatchProcesses[0] : undefined;
 
-            if (dotNetWatchProcess) console.log(`dotnet watch command: ${dotNetWatchProcess.cmd}`);
-            else console.log("dotnet watch process not found");
+            // if (dotNetWatchProcess) console.log(`dotnet watch command: ${dotNetWatchProcess.cmd}`);
+            // else console.log("dotnet watch process not found");
 
             // dotnet watch...
 
@@ -183,7 +183,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     return;
                 }
 
-                this.restartCheckProcessesTimeout(timeoutMs);
+                this.restartCheckProcessesTimeout(timeoutMs); // keep same interval
                 return;
             }
             else if (this.dotNetWatchPid !== dotNetWatchProcess.pid) {
@@ -194,10 +194,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
             // child process (i.e. the project being watched)...
 
             const projectProcesses = await findProcesses("name", EnvironmentUtil.processFileName(this.processFileName));
-            const projectProcess = projectProcesses.length === 1 ? projectProcesses[0] : undefined;
+            const projectProcess = EnvironmentUtil.getProjectProcess(projectProcesses, this.processFileName);
 
-            if (projectProcess) console.log(`project process command: ${projectProcess.cmd}`);
-            else console.log("project process not found");
+            // if (projectProcess) console.log(`project process command: ${projectProcess.cmd}`);
+            // else console.log("project process not found");
 
             if (!projectProcess) {
                 if (this.isChildProcessRunning) {
@@ -208,7 +208,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     return;
                 }
 
-                this.restartCheckProcessesTimeout(timeoutMs);
+                this.restartCheckProcessesTimeout(timeoutMs); // keep same interval
                 return;
             }
             else if (this.childPid !== projectProcess.pid) {
@@ -262,10 +262,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     this.stopWatching(true); // full stop
                     return;
                 }
-
-                this.restartCheckProcessesTimeout(this.debugConfiguration.watchOptions.interval ?? StalkerDebugAdapter.DefaultIntervalMs); // (most likely) slows down the interval
-                return;
             }
+
+            this.restartCheckProcessesTimeout(this.debugConfiguration.watchOptions.interval ?? StalkerDebugAdapter.DefaultIntervalMs); // (most likely) slows down the interval
+            return;
         }, timeoutMs);
     }
 

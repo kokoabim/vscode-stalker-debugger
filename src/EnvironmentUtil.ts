@@ -4,6 +4,12 @@ export class EnvironmentUtil {
     static readonly pathDelimiter = process.platform === 'win32' ? '\\' : '/';
     static readonly platform = process.platform;
 
+    static getProjectProcess(processes: ProcessInfo[], processFileName: string): ProcessInfo | undefined {
+        return this.platform === 'win32'
+            ? (processes.length === 1 ? processes[0] : undefined)
+            : processes.find(p => p.bin?.endsWith(`/${processFileName}`) === true);
+    }
+
     static modifyPath(path: string): string {
         switch (this.platform) {
             case 'darwin': return path.replace(/\\/g, '/');
@@ -24,6 +30,16 @@ export class EnvironmentUtil {
     }
 
     static processFileName(processFileName: string): string {
-        return process.platform === 'win32' ? processFileName + ".exe" : processFileName;
+        return this.platform === 'win32' ? processFileName + ".exe" : processFileName;
     }
 }
+
+export type ProcessInfo = {
+    bin?: string;
+    cmd: string;
+    gid?: number;
+    name: string;
+    pid: number;
+    ppid?: number;
+    uid?: number;
+};
