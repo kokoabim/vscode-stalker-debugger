@@ -1,9 +1,10 @@
 import { execSync } from "child_process";
 import { existsSync } from "fs";
-import { CancellationToken, DebugConfiguration, DebugConfigurationProvider, ProviderResult, WorkspaceFolder, window } from "vscode";
+import { CancellationToken, DebugConfiguration, DebugConfigurationProvider, ProviderResult, WorkspaceFolder, window, env } from "vscode";
 
 import { StalkerDebugConfiguration } from "./StalkerDebugConfiguration";
 import { VariableUtil } from "./VariableUtil";
+import { EnvironmentUtil } from "./EnvironmentUtil";
 
 export class StalkerDebugConfigurationProvider implements DebugConfigurationProvider {
     // eslint-disable-next-line no-unused-vars
@@ -11,6 +12,7 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
         const configuration: StalkerDebugConfiguration = debugConfiguration as StalkerDebugConfiguration;
         VariableUtil.prepareLaunchConfigVars(configuration);
         VariableUtil.expandVSCodeVarsForObject(configuration);
+        EnvironmentUtil.modifyPaths(configuration);
 
         if (!configuration) return window.showInformationMessage("Failed to get debug configuration").then(_ => undefined);
         else if (!configuration.project) return window.showInformationMessage("No project to build, run and watch").then(_ => undefined);
@@ -27,8 +29,7 @@ export class StalkerDebugConfigurationProvider implements DebugConfigurationProv
         configuration.processOptions ??= {};
         configuration.watchOptions ??= {};
 
-        configuration.watchOptions.dotnet = StalkerDebugConfigurationProvider.locateDotNetExecutable(configuration.watchOptions.dotnet ?? 'dotnet');
-        if (!configuration.watchOptions.dotnet) return window.showInformationMessage("Failed to locate dotnet executable").then(_ => undefined);
+        configuration.watchOptions.dotnet ??= "dotnet";
 
         if (configuration.watchOptions.disableOptimizations) configuration.env.DOTNET_WATCH_SUPPRESS_MSBUILD_INCREMENTALISM = '1';
         if (configuration.watchOptions.doNotLaunchBrowser || (configuration.processOptions.launchSettingsProfile && configuration.attachOptions.action && configuration.attachOptions.action !== 'nothing')) configuration.env.DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER = '1';
