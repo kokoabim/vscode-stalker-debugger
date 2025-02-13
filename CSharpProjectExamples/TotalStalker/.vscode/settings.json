@@ -2,8 +2,7 @@
     "dotnet.defaultSolution": "TotalStalker.sln",
     "files.exclude": {
         "**/bin/": true,
-        "**/obj/": true,
-        "**/node_modules/": true,
+        "**/obj/": true
     },
     "cSpell.ignoreWords": [
         "popperjs"

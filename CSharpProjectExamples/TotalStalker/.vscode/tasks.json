@@ -16,6 +16,23 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "webpack",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "buildDev"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/TotalStalker"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$tsc"]
         }
     ]
 }

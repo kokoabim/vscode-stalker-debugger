@@ -1,3 +1,7 @@
 html {
     -webkit-font-smoothing: antialiased;
 }
+
+p {
+    font-weight: normal;
+}

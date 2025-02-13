@@ -4,7 +4,7 @@ import { Configuration } from "webpack";
 
 const config: Configuration = {
     entry: glob.sync("./scripts/**/*.ts").reduce((entries, path) => {
-        const entry = path.replace(/(.*\/)?scripts\//, "").replace(".ts", "");
+        const entry = path.replace(/(.*[\/\\])?scripts[\/\\]/, "").replace(".ts", "");
         path = "./" + path;
         entries[entry] = path;
         return entries;

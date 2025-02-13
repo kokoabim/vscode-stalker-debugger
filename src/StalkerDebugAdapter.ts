@@ -2,8 +2,9 @@ import { Disposable, DebugAdapter, DebugProtocolMessage, Event, EventEmitter, Ta
 import { DebugProtocol } from '@vscode/debugprotocol';
 import { StalkerDebugConfiguration } from './StalkerDebugConfiguration';
 import findProcesses from 'find-process';
+import { EnvironmentUtil } from './EnvironmentUtil';
 
-export type PreBuildTask = { name: string, commandLine: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean, problemMatcher?: any };
+export type PreBuildTask = { name: string, commandLine: string, cwd?: string, isBackground?: boolean, waitFor?: boolean, failOnNonZeroExitCode?: boolean, problemMatcher?: any };
 export type PreBuildTaskExecution = { definition: PreBuildTask, task: TaskExecution | undefined, hasEnded?: boolean, exitCode?: number | undefined; };
 
 export class StalkerDebugAdapter implements Disposable, DebugAdapter {
@@ -18,7 +19,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
     private readonly projectFileName: string;
 
     private attachedIncrement = 0;
-    private checkProcessesInterval: NodeJS.Timeout | undefined;
+    private checkProcessesTimeout: NodeJS.Timeout | undefined;
     private childPid = 0;
     private debuggerIsStopping = false;
     private dotNetWatchPid = 0;
@@ -31,11 +32,11 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         this.debugConfiguration = debugSession.configuration as StalkerDebugConfiguration;
         this.workspaceFolder = debugSession.workspaceFolder;
 
-        const projectFileName = this.debugConfiguration.project.split('/').pop();
+        const projectFileName = this.debugConfiguration.project.split(EnvironmentUtil.pathDelimiter).pop();
         if (!projectFileName) throw new Error('project is not valid');
         this.projectFileName = projectFileName;
 
-        const processFileName = this.debugConfiguration.process.split('/').pop();
+        const processFileName = this.debugConfiguration.process.split(EnvironmentUtil.pathDelimiter).pop();
         if (!processFileName) throw new Error('process is not valid');
         this.processFileName = processFileName;
 
@@ -62,7 +63,6 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         if (message.type === 'request') {
             const request = message as DebugProtocol.Request;
 
-            // eslint-disable-next-line no-empty
             if (request.command === 'initialize') {
             }
             else if (request.command === 'launch') {
@@ -89,7 +89,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
     }
 
     private async getLaunchUrls(): Promise<string[]> {
-        const launchProfile = await this.getLaunchSettingsProfile(this.debugConfiguration.cwd.replace(this.workspaceFolder!.uri.fsPath + "/", ""), this.debugConfiguration.launchSettingsProfile || this.debugConfiguration.processOptions.launchSettingsProfile);
+        const launchProfile = await this.getLaunchSettingsProfile(this.debugConfiguration.cwd.replace(this.workspaceFolder!.uri.fsPath + EnvironmentUtil.pathDelimiter, ""), this.debugConfiguration.launchSettingsProfile || this.debugConfiguration.processOptions.launchSettingsProfile);
 
         return (launchProfile ? launchProfile.applicationUrl?.split(";") : undefined)
             ?? (this.debugConfiguration.url ? [this.debugConfiguration.url] : []);
@@ -156,21 +156,21 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         }
     }
 
-    private restartCheckProcessesInterval(intervalMs: number): void {
-        this.stopCheckProcessesInterval();
-        this.startCheckProcessesInterval(intervalMs);
+    private restartCheckProcessesTimeout(timeoutMs: number): void {
+        this.stopCheckProcessesTimeout();
+        this.startCheckProcessesTimeout(timeoutMs);
     }
 
-    private startCheckProcessesInterval(intervalMs: number): void {
+    private startCheckProcessesTimeout(timeoutMs: number): void {
         if (!this.dotNetWatchTask) throw new Error('dotnet watch is not running'); // ! this should never happen
 
-        this.checkProcessesInterval = setInterval(async () => {
-            let processes = [];
+        this.checkProcessesTimeout = setTimeout(async () => {
+            const dotNetWatchProcessNameRegExp = new RegExp(`dotnet.* watch run .*--project "?${this.debugConfiguration.project.replaceAll("\\", "\\\\")}"?`, "i");
+            const dotNetWatchProcesses = await findProcesses("name", dotNetWatchProcessNameRegExp);
+            const dotNetWatchProcess = dotNetWatchProcesses.length === 1 ? dotNetWatchProcesses[0] : undefined;
 
-            // NOTE: `findProcesses` returns array of objects that _do_ have a property of `bin` though not in the type definition (hence the cast to any)
-
-            processes = await findProcesses("name", `${this.debugConfiguration.watchOptions.dotnet} watch run`);
-            const dotNetWatchProcess = processes.find(p => (<any>p).bin === `${this.debugConfiguration.watchOptions.dotnet} watch run` && p.cmd.includes(this.projectFileName));
+            // if (dotNetWatchProcess) console.log(`dotnet watch command: ${dotNetWatchProcess.cmd}`);
+            // else console.log("dotnet watch process not found");
 
             // dotnet watch...
 
@@ -180,7 +180,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '‼️ .NET Watch is not running. Stopping debugger.\n' } });
 
                     this.stopWatching(true); // full stop
+                    return;
                 }
+
+                this.restartCheckProcessesTimeout(timeoutMs); // keep same interval
                 return;
             }
             else if (this.dotNetWatchPid !== dotNetWatchProcess.pid) {
@@ -190,29 +193,33 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
             // child process (i.e. the project being watched)...
 
-            processes = (await findProcesses("name", this.processFileName));
-            const childProcess = processes.find(p => (<any>p).bin.endsWith(`/${this.processFileName}`));
+            const projectProcesses = await findProcesses("name", EnvironmentUtil.processFileName(this.processFileName));
+            const projectProcess = EnvironmentUtil.getProjectProcess(projectProcesses, this.processFileName);
 
-            if (!childProcess) {
+            // if (projectProcess) console.log(`project process command: ${projectProcess.cmd}`);
+            // else console.log("project process not found");
+
+            if (!projectProcess) {
                 if (this.isChildProcessRunning) {
                     this.childPid = 0;
                     this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '🔥 Child process is no longer running. A hot reload build should be in process.\n' } });
 
-                    this.restartCheckProcessesInterval(this.debugConfiguration.attachOptions.interval ?? (StalkerDebugAdapter.DefaultIntervalMs / 2)); // (most likely) speeds up the interval
+                    this.restartCheckProcessesTimeout(this.debugConfiguration.attachOptions.interval ?? (StalkerDebugAdapter.DefaultIntervalMs / 2)); // (most likely) speeds up the interval
+                    return;
                 }
+
+                this.restartCheckProcessesTimeout(timeoutMs); // keep same interval
                 return;
             }
-            else if (this.childPid !== childProcess.pid) {
-                clearInterval(this.checkProcessesInterval); // will be restarted after attaching
-
+            else if (this.childPid !== projectProcess.pid) {
                 if (this.isChildProcessRunning) {
-                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔄 Child process has been restarted (${childProcess.pid}).\n` } });
+                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔄 Child process has been restarted (${projectProcess.pid}).\n` } });
                 }
                 else {
-                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `✅ Child process is now running (${childProcess.pid}).\n` } });
+                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `✅ Child process is now running (${projectProcess.pid}).\n` } });
                 }
 
-                this.childPid = childProcess.pid;
+                this.childPid = projectProcess.pid;
 
                 if (await debug.startDebugging(this.debugSession.workspaceFolder, {
                     name: '.NET Stalker Attach',
@@ -266,19 +273,21 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                     this.stopWatching(true); // full stop
                     return;
                 }
-
-                this.restartCheckProcessesInterval(this.debugConfiguration.watchOptions.interval ?? StalkerDebugAdapter.DefaultIntervalMs); // (most likely) slows down the interval
             }
 
-        }, intervalMs);
+            this.restartCheckProcessesTimeout(this.debugConfiguration.watchOptions.interval ?? StalkerDebugAdapter.DefaultIntervalMs); // (most likely) slows down the interval
+            return;
+        }, timeoutMs);
     }
 
     private async startDebugging(): Promise<void> {
         this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '🚀 Starting .NET Stalker Debugger.\n' } });
 
         if (!await this.startPreBuildTasks()) return;
+
         await this.startDotNetWatch();
-        this.startCheckProcessesInterval(this.debugConfiguration.attachOptions.interval ?? (StalkerDebugAdapter.DefaultIntervalMs / 2));
+
+        this.startCheckProcessesTimeout(this.debugConfiguration.attachOptions.interval ?? (StalkerDebugAdapter.DefaultIntervalMs / 2));
     }
 
     private async startDotNetWatch(): Promise<void> {
@@ -296,7 +305,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
         const verboseArg = this.debugConfiguration.watchOptions.verbose ? ' --verbose' : "";
 
-        const commandLine = `${this.debugConfiguration.watchOptions.dotnet} watch run ${profileArg}${verboseArg}${dotNetWatchArgs} --project ${this.debugConfiguration.project}${urlsArg}${childDotNetProcessArgs}`;
+        const commandLine = `${this.debugConfiguration.watchOptions.dotnet} watch run ${profileArg}${verboseArg}${dotNetWatchArgs} --project "${this.debugConfiguration.project}"${urlsArg}${childDotNetProcessArgs}`;
         const shellExec = new ShellExecution(commandLine, { cwd: this.debugConfiguration.cwd, env: this.debugConfiguration.env });
 
         const task = new Task({ type: 'process' }, TaskScope.Workspace, '.NET Stalker Watch', '.NET Stalker', shellExec, "stalker");
@@ -311,7 +320,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
      * @returns If task is waited for and has ended, the exit code if the task completed or undefined if it was terminated. If task is not waited for, false.
      */
     private async startPreBuildTask(preBuildTask: PreBuildTask): Promise<number | false | undefined> {
-        const shellExec = new ShellExecution(preBuildTask.commandLine, { cwd: this.debugConfiguration.cwd, env: this.debugConfiguration.env });
+        const shellExec = new ShellExecution(preBuildTask.commandLine, { cwd: preBuildTask.cwd ?? this.debugConfiguration.cwd, env: this.debugConfiguration.env });
 
         const task = new Task({ type: 'process' }, TaskScope.Workspace, `.NET Stalker Task: ${preBuildTask.name}`, '.NET Stalker', shellExec);
         task.isBackground = preBuildTask.isBackground ?? false;
@@ -345,10 +354,10 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         return true;
     }
 
-    private stopCheckProcessesInterval(): void {
-        if (this.checkProcessesInterval) {
-            clearInterval(this.checkProcessesInterval);
-            this.checkProcessesInterval = undefined;
+    private stopCheckProcessesTimeout(): void {
+        if (this.checkProcessesTimeout) {
+            clearInterval(this.checkProcessesTimeout);
+            this.checkProcessesTimeout = undefined;
         }
     }
 
@@ -371,7 +380,7 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
         if (this.debuggerIsStopping) return;
         this.debuggerIsStopping = true;
 
-        this.stopCheckProcessesInterval();
+        this.stopCheckProcessesTimeout();
         this.stopPreBuildTasks();
         this.stopDotNetWatchTask();
 
