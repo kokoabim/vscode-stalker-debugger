@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Stalker",
+            "name": ".NET Stalker (Chrome)",
             "type": "stalker",
             "request": "launch",
             "vars": {
@@ -39,18 +39,54 @@
             }
         },
         {
-            "name": "Launch",
+            "name": ".NET Stalker (Firefox)",
+            "type": "stalker",
+            "request": "launch",
+            "vars": {
+                "framework": "net9.0",
+                "projectDir": "${workspaceFolder}/src/${var:projectName}",
+                "projectName": "TotalStalker"
+            },
+            "project": "${var:projectDir}/${var:projectName}.csproj",
+            "process": "${var:projectDir}/bin/Debug/${var:framework}/${var:projectName}",
+            "cwd": "${var:projectDir}",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "NODE_ENV": "development",
+            },
+            "url": "http://localhost:5000",
+            "webRoot": "${var:projectDir}/wwwroot",
+            "buildOptions": {
+                "preBuildTasks": [
+                    {
+                        "name": "ESLint",
+                        "commandLine": "npx eslint --color ./scripts",
+                    },
+                    {
+                        "name": "Webpack",
+                        "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} --devtool source-map --color",
+                        "isBackground": true,
+                        "waitFor": false,
+                        "problemMatcher": "$stalker-webpack-watch"
+                    }
+                ],
+            },
+            "attachOptions": {
+                "action": "debugWithFirefox"
+            }
+        },
+        {
+            "name": "Launch (default coreclr; for comparison)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/TotalStalker/bin/Debug/net9.0/TotalStalker.dll",
-            "args": [],
             "cwd": "${workspaceFolder}/src/TotalStalker",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
-                "uriFormat": "%s/swagger"
+                "uriFormat": "%s"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -58,39 +94,6 @@
             "logging": {
                 "moduleLoad": false
             }
-        },
-        {
-            "name": "Debug with Chrome",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/TotalStalker/bin/Debug/net9.0/TotalStalker.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/TotalStalker",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "debugWithChrome",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "logging": {
-                "moduleLoad": false
-            }
-        },
-        {
-            "name": "Watch",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "watch",
-            "program": "${workspaceFolder}/src/TotalStalker/bin/Debug/net9.0/TotalStalker.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/TotalStalker",
-            "stopAtEntry": false,
-            "logging": {
-                "moduleLoad": false
-            }
-        },
+        }
     ]
 }

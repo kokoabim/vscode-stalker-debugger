@@ -1,5 +1,14 @@
 ## β Beta
 
+#### 2025-02-14 — 0.3.0
+
+-   Added support for Mozilla Firefox debugging.
+    -   Requires [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension.
+        -   Note: The extension's `reloadOnChange.watch` debug configuration property is set to `${webRoot}/**/*` to auto-reload on website file/content changes.
+    -   To use, set `attachOptions.action` to `debugWithFirefox`.
+-   Added `attachOptions.browserTaskProperties` launch configuration object property. This object is provided as debug configuration properties when debugging with an external browser. For example, to specify specific options for the Debugger for Firefox extension.
+-   Improved README.md.
+
 #### 2025-02-13 — 0.2.0
 
 -   Added changes to ensure support on Linux and Windows. (Tested on Ubuntu 24.04 and Windows 11.)

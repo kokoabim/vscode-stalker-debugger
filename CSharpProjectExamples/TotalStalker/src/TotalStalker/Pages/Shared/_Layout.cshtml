@@ -6,7 +6,7 @@
     <title>@ViewData["Title"]</title>
 
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/css/common.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/common.css" rel="stylesheet" />
 
     @await RenderSectionAsync("Head", required: false)
 </head>
@@ -15,7 +15,7 @@
     @RenderBody()
 
     <script>var exports = {};</script>
-    <script src="~/js/common.js" asp-append-version="true"></script>
+    <script src="~/js/common.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

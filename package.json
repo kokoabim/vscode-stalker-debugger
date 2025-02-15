@@ -1,7 +1,7 @@
 {
     "name": "stalker-debugger",
     "publisher": "spencerjames",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "displayName": ".NET Stalker Debugger",
     "shortName": "Stalker Debugger",
     "description": "Builds, runs, attaches, hot reloads, rebuilds and reattaches a .NET project, with client-side JS/TS breakpoint support. All in one debug session.",
@@ -46,7 +46,9 @@
         "webpack",
         "hot reload",
         "npm",
-        "stalker"
+        "stalker",
+        "chrome",
+        "firefox"
     ],
     "activationEvents": [
         "onDebugResolve:stalker"
@@ -213,12 +215,14 @@
                                         "enum": [
                                             "nothing",
                                             "openExternally",
-                                            "debugWithChrome"
+                                            "debugWithChrome",
+                                            "debugWithFirefox"
                                         ],
                                         "enumDescriptions": [
                                             "Do nothing",
                                             "Open the URL in the default browser",
-                                            "Open the URL in Chrome with the debugger attached"
+                                            "Open the URL in Chrome with the debugger attached",
+                                            "Open the URL in Firefox with the debugger attached"
                                         ],
                                         "default": "openExternally"
                                     },
@@ -248,6 +252,18 @@
                                                 "moduleLoad": false
                                             }
                                         }
+                                    },
+                                    "browserTaskProperties": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "types": [
+                                                "string",
+                                                "number",
+                                                "boolean",
+                                                "object"
+                                            ]
+                                        },
+                                        "description": "Properties for internal the Visual Studio Code browser debug task."
                                     }
                                 }
                             },
@@ -430,7 +446,7 @@
                             },
                             "webRoot": {
                                 "type": "string",
-                                "description": "Path to the web root of the project being debugged with Google Chrome. Ignored if `processOptions.action` is not `debugWithChrome`. Default is the current workspace but normally takes on the form of: ${workspaceFolder}/src/(projectName)/wwwroot",
+                                "description": "Path to the web root of the project being debugged with external browser. Ignored if `processOptions.action` is not `debugWith*`. Default is the current workspace but normally takes on the form of: ${workspaceFolder}/src/(projectName)/wwwroot",
                                 "default": "${workspaceFolder}"
                             },
                             "logging": {

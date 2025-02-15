@@ -1,25 +1,19 @@
-# .NET Stalker Debugger
+<h1 align="center">
+    <p><img src="https://github.com/kokoabim/vscode-stalker-debugger/blob/main/images/bug-512.png?raw=true" alt="logo" width="240"></p>
+    <p>C# .NET Stalker Debugger</p>
+</h1>
+<h3 align="center">All-in-One C# .NET (5+ and Core) and JavaScript/TypeScript Debugger</h3>
+<p align="center">Use this debugger, instead of <code>dotnet</code>/<code>coreclr</code>, in launch configurations in <code>launch.json</code>. It provides the same debugging experience plus additional functionality all in a single debug session.</p>
+<p align="center"><a href="https://marketplace.visualstudio.com/items?itemName=spencerjames.stalker-debugger"><img src="https://vsmarketplacebadges.dev/version/spencerjames.stalker-debugger.png?label=.NET%20Stalker%20Debugger"></a></p>
 
 <p align="center">
-<img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
-<span style="font-size:.85em">.NET Stalker Debugger: VS Code debug console output</span>
+    <img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
+    <span style="font-size:.85em">.NET Stalker Debugger: VS Code debug console output</span>
 </p>
 
-<p align="center" style="font-size:1.25em">🎉 All-in-One C# ASP.NET (5+ and Core) and JavaScript/TypeScript debug session within Visual Studio Code 🎉</p>
+# Primary Features
 
-This debugger is used instead of the default `dotnet`/`coreclr` launch configurations in `launch.json`. It provides the same debugging experience plus more in a single debug session.
-
-# TL;DR
-
-1. Install this extension
-2. Check out the [example C# project](https://github.com/kokoabim/vscode-stalker-debugger/tree/main/CSharpProjectExamples/TotalStalker) and its use of:
-    - VS Code launch configuration `.NET Stalker` in `.vscode/launch.json`
-    - TypeScript, ESLint and Webpack configuration files
-3. Set breakpoint in jQuery document-ready function of `src/TotalStalker/scripts/common.ts` (to demonstrate client-side debugging)
-4. Set breakpoint in `OnGet()` method of `src/TotalStalker/Pages/Index.cshtml.cs` (to demonstrate backend debugging)
-5. Debug with `.NET Stalker` launch configuration 🚀
-
-# Primary Three Features
+<p align="center" style="font-size:1.25em">🚫 No need to manually stop, re-attach or restart debuggers or run multiple tasks 🚫</p>
 
 There are three primary features of .NET Stalker Debugger.
 
@@ -29,18 +23,26 @@ There are three primary features of .NET Stalker Debugger.
     - Build and run the .NET project
 2. 🪲 <b>DEBUG</b> — Debug both backend and front-end
     - Attach to the .NET project process for backend debugging
-    - Debug with Google Chrome's developer tools for client-side debugging
+    - Debug with Google Chrome or Mozilla Firefox developer tools for client-side debugging
 3. ⌚️ <b>WATCH-RELOAD/REBUILD-REATTACH</b> — Watch for changes
     - Watch TypeScript files to "hot transpile" to JavaScript when needed
     - Watch other client-side files to reload browser on changes
     - Watch .NET project files to perform "hot reloads" when possible
     - Rebuild and re-attach to project's new process when a "hot reload" build is needed
 
-<p align="center" style="font-size:1.25em">🚫 No need to manually stop, re-attach or restart debuggers or run multiple tasks 🚫</p>
+# TL;DR
+
+1. Install this extension
+2. Check out the [example C# project](https://github.com/kokoabim/vscode-stalker-debugger/tree/main/CSharpProjectExamples/TotalStalker) for an example of use, specifically:
+    - VS Code launch configuration `.NET Stalker` in `.vscode/launch.json`
+    - TypeScript, ESLint and Webpack configuration files
+3. Set breakpoint in jQuery document-ready function of `src/TotalStalker/scripts/common.ts` (to demonstrate client-side debugging)
+4. Set breakpoint in `OnGet()` method of `src/TotalStalker/Pages/Index.cshtml.cs` (to demonstrate backend debugging)
+5. Debug with `.NET Stalker` launch configuration 🚀
 
 # 👨🏼‍💻 Use Cases for Developers
 
-All use cases of .NET Stalker Debugger have [all three primary features](#primary-three-features) (Build, Debug and Watch-Reload/Rebuild-Reattach) in a single debug session that is native to Visual Studio Code and its tooling.
+All use cases of .NET Stalker Debugger have [all primary features](#primary-features) (Build, Debug and Watch-Reload/Rebuild-Reattach) in a single debug session that is native to Visual Studio Code and its tooling.
 
 ### 🔙 Backend Developer
 
@@ -70,7 +72,7 @@ All use cases of .NET Stalker Debugger have [all three primary features](#primar
 -   Debug Session:
     -   Debug/breakpoints of C# ASP.NET Web App/API
     -   Watch, re-build and re-attach to project's new process automatically
-    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome)
+    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome or Mozilla Firefox)
     -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
     -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
 
@@ -85,26 +87,38 @@ All use cases of .NET Stalker Debugger have [all three primary features](#primar
 
 Logical order of phases within the [three primary features](#primary-three-features). Depending on the launch configuration, some phases may not be used.
 
-| #   | Phase     | Feature | Tooling | Description                                                                        |
-| --- | --------- | ------- | ------- | ---------------------------------------------------------------------------------- |
-| 1   | PreBuild  | 🛠️      | eslint  | Lint JavaScript and TypeScript files                                               |
-| 2   | PreBuild  | 🛠️      | webpack | Transpile TypeScript to JavaScript for client-side use                             |
-| 3   | Continual | ⌚️     | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                |
-| 4   | Build     | 🛠️      | dotnet  | Build and run the .NET project                                                     |
-| 5   | Debug     | 🪲      | vscode  | Attach to the .NET project process for backend debugging                           |
-| 6   | Debug     | 🪲      | chrome  | Debug with Google Chrome's developer tools for client-side debugging               |
-| 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                    |
-| 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed |
+| #   | Phase     | Feature | Tooling | Description                                                                           |
+| --- | --------- | ------- | ------- | ------------------------------------------------------------------------------------- |
+| 1   | PreBuild  | 🛠️      | eslint  | Lint JavaScript and TypeScript files                                                  |
+| 2   | PreBuild  | 🛠️      | webpack | Transpile TypeScript to JavaScript for client-side use                                |
+| 3   | Continual | ⌚️     | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                   |
+| 4   | Build     | 🛠️      | dotnet  | Build and run the .NET project                                                        |
+| 5   | Debug     | 🪲      | vscode  | Attach to the .NET project process for backend debugging                              |
+| 6   | Debug     | 🪲      | browser | Debug with Google Chrome or Mozilla Firefox developer tools for client-side debugging |
+| 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                       |
+| 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed    |
 
 # Requirements
 
-Works on modern versions of linux (Ubuntu), macOS and Windows, where the following can be installed:
+### Supported OS's (at least tested on)
+
+Works on modern versions of linux (Ubuntu), macOS and Windows, where the requirements can be installed.
+
+### Requirements
 
 -   .NET SDK 6.0 or later
 -   Visual Studio Code 1.96.0 or later
--   Visual Studio Code extensions [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
--   Google Chrome
--   Node.js (if using TypeScript and client-side debugging)
+-   Visual Studio Code [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) extensions
+
+### Requirements for Client-Side Debugging
+
+-   Node.js and NPM
+-   Google Chrome and/or Mozilla Firefox
+    -   If using Mozilla Firefox:
+        -   Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
+        -   Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
+
+Note: Support for Microsoft Edge will come in a later release.
 
 # Launch Configurations
 
@@ -140,12 +154,13 @@ When adding/modifying a launch configuration in `launch.json`, after setting `ty
 
 Options for attaching to child process started by .NET Watch.
 
-| Property         | Type          | Description                                                                                                                    | Required | Default                              | Defined Values                                 |
-| ---------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------ | ---------------------------------------------- |
-| `action`         | `string`      | Action to take when the child process is initially attached to.                                                                |          | `openExternally`                     | `nothing`, `openExternally`, `debugWithChrome` |
-| `interval`       | `number`      | Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). |          | `500`                                |                                                |
-| `urlPath`        | `string`      | URL path to open when attaching to the process.                                                                                |          | `""`                                 |                                                |
-| `taskProperties` | `{[key]:any}` | Properties for internal the Visual Studio Code attach task.                                                                    |          | `{ logging: { moduleLoad: false } }` |                                                |
+| Property                | Type          | Description                                                                                                                    | Required | Default                              | Defined Values                                                     |
+| ----------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------ | ------------------------------------------------------------------ |
+| `action`                | `string`      | Action to take when the child process is initially attached to.                                                                |          | `openExternally`                     | `nothing`, `openExternally`, `debugWithChrome`, `debugWithFirefox` |
+| `interval`              | `number`      | Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). |          | `500`                                |                                                                    |
+| `urlPath`               | `string`      | URL path to open when attaching to the process.                                                                                |          | `""`                                 |                                                                    |
+| `taskProperties`        | `{[key]:any}` | Properties for internal the Visual Studio Code attach task.                                                                    |          | `{ logging: { moduleLoad: false } }` |                                                                    |
+| `browserTaskProperties` | `{[key]:any}` | Properties for internal the Visual Studio Code browser debug task.                                                             |          | `{}`                                 |                                                                    |
 
 ### Type `buildOptions` Properties
 
@@ -235,7 +250,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
 }
 ```
 
-### Full launch configuration with ESLint, Webpack (watch mode) and Google Chrome client-side debugging
+### Full launch configuration with ESLint, Webpack (watch mode) and Google Chrome (or Mozilla Firefox) client-side debugging
 
 ```json
 {
@@ -277,6 +292,8 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     }
 }
 ```
+
+Note: Set `attachOptions.action` to `debugWithFirefox` to debug with Mozilla Firefox.
 
 # Client-Side JavaScript/TypeScript Debugging
 

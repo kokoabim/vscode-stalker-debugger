@@ -249,11 +249,12 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
                             try {
                                 const didStartDebug = await debug.startDebugging(this.debugSession.workspaceFolder, {
-                                    name: '.NET Stalker Chrome',
+                                    name: '.NET Stalker: Chrome',
                                     type: 'chrome',
                                     request: 'launch',
                                     url: url,
-                                    webRoot: this.debugConfiguration.webRoot
+                                    webRoot: this.debugConfiguration.webRoot,
+                                    ...this.debugConfiguration.attachOptions.browserTaskProperties
                                 }, this.debugSession);
 
 
@@ -263,6 +264,30 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                             }
                             catch (e) {
                                 this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Google Chrome: ${e}\n` } });
+                            }
+                        }
+                        else if (this.debugConfiguration.attachOptions.action === "debugWithFirefox") {
+                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔍 Debugging with Mozilla Firefox (${url}).\n` } });
+
+                            try {
+                                const didStartDebug = await debug.startDebugging(this.debugSession.workspaceFolder, {
+                                    name: '.NET Stalker: Firefox',
+                                    type: 'firefox',
+                                    request: 'launch',
+                                    url: url,
+                                    webRoot: this.debugConfiguration.webRoot,
+                                    reloadOnChange: {
+                                        watch: [`${this.debugConfiguration.webRoot}/**/*`]
+                                    },
+                                    ...this.debugConfiguration.attachOptions.browserTaskProperties
+                                }, this.debugSession);
+
+                                if (!didStartDebug) {
+                                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Mozilla Firefox.\n` } });
+                                }
+                            }
+                            catch (e) {
+                                this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Mozilla Firefox: ${e}\n` } });
                             }
                         }
                     }

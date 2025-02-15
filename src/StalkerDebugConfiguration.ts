@@ -4,6 +4,7 @@ import { PreBuildTask } from "./StalkerDebugAdapter";
 export interface StalkerDebugConfiguration {
     attachOptions: {
         action?: string;
+        browserTaskProperties?: { [key: string]: any };
         interval?: number;
         urlPath?: string;
         taskProperties?: { [key: string]: any };
