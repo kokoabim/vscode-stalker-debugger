@@ -4,7 +4,7 @@
 </h1>
 <h3 align="center">All-in-One C# .NET (5+ and Core) and JavaScript/TypeScript Debugger</h3>
 <p align="center">Use this debugger, instead of <code>dotnet</code>/<code>coreclr</code>, in launch configurations in <code>launch.json</code>. It provides the same debugging experience plus additional functionality all in a single debug session.</p>
-<p align="center"><a href="https://marketplace.visualstudio.com/items?itemName=spencerjames.stalker-debugger"><img src="https://vsmarketplacebadges.dev/version/spencerjames.stalker-debugger.png?label=.NET%20Stalker%20Debugger"></a></p>
+<p align="center"><a href="https://marketplace.visualstudio.com/items?itemName=spencerjames.stalker-debugger"><img src="https://vsmarketplacebadges.dev/version/spencerjames.stalker-debugger.svg?label=.NET%20Stalker%20Debugger"></a></p>
 
 <p align="center">
     <img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
@@ -23,7 +23,7 @@ There are three primary features of .NET Stalker Debugger.
     - Build and run the .NET project
 2. 🪲 <b>DEBUG</b> — Debug both backend and front-end
     - Attach to the .NET project process for backend debugging
-    - Debug session connects with Google Chrome, Mozilla Firefox or Microsoft Edge remote debugger for client-side debugging
+    - Debug with Google Chrome or Mozilla Firefox developer tools for client-side debugging
 3. ⌚️ <b>WATCH-RELOAD/REBUILD-REATTACH</b> — Watch for changes
     - Watch TypeScript files to "hot transpile" to JavaScript when needed
     - Watch other client-side files to reload browser on changes
@@ -72,7 +72,7 @@ All use cases of .NET Stalker Debugger have [all primary features](#primary-feat
 -   Debug Session:
     -   Debug/breakpoints of C# ASP.NET Web App/API
     -   Watch, re-build and re-attach to project's new process automatically
-    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome, Mozilla Firefox or Microsoft Edge)
+    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome or Mozilla Firefox)
     -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
     -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
 
@@ -87,16 +87,16 @@ All use cases of .NET Stalker Debugger have [all primary features](#primary-feat
 
 Logical order of phases within the [three primary features](#primary-three-features). Depending on the launch configuration, some phases may not be used.
 
-| #   | Phase     | Feature | Tooling | Description                                                                                           |
-| --- | --------- | ------- | ------- | ----------------------------------------------------------------------------------------------------- |
-| 1   | PreBuild  | 🛠️      | eslint  | Lint JavaScript and TypeScript files                                                                  |
-| 2   | PreBuild  | 🛠️      | webpack | Transpile TypeScript to JavaScript for client-side use                                                |
-| 3   | Continual | ⌚️     | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                                   |
-| 4   | Build     | 🛠️      | dotnet  | Build and run the .NET project                                                                        |
-| 5   | Debug     | 🪲      | vscode  | Attach to the .NET project process for backend debugging                                              |
-| 6   | Debug     | 🪲      | browser | Debug with Google Chrome, Mozilla Firefox or Microsoft Edge developer tools for client-side debugging |
-| 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                                       |
-| 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed                    |
+| #   | Phase     | Feature | Tooling | Description                                                                           |
+| --- | --------- | ------- | ------- | ------------------------------------------------------------------------------------- |
+| 1   | PreBuild  | 🛠️      | eslint  | Lint JavaScript and TypeScript files                                                  |
+| 2   | PreBuild  | 🛠️      | webpack | Transpile TypeScript to JavaScript for client-side use                                |
+| 3   | Continual | ⌚️     | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                   |
+| 4   | Build     | 🛠️      | dotnet  | Build and run the .NET project                                                        |
+| 5   | Debug     | 🪲      | vscode  | Attach to the .NET project process for backend debugging                              |
+| 6   | Debug     | 🪲      | browser | Debug with Google Chrome or Mozilla Firefox developer tools for client-side debugging |
+| 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                       |
+| 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed    |
 
 # Requirements
 
@@ -113,12 +113,12 @@ Works on modern versions of linux (Ubuntu), macOS and Windows, where the require
 ### Requirements for Client-Side Debugging
 
 -   Node.js and NPM
--   Google Chrome, Mozilla Firefox and/or Microsoft Edge
+-   Google Chrome and/or Mozilla Firefox
     -   If using Mozilla Firefox:
         -   Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
-        -   Install Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
-    -   If using Microsoft Edge:
-        -   Install Visual Studio Code [Microsoft Edge Tools for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension
+        -   Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
+
+Note: Support for Microsoft Edge will come in a later release.
 
 # Launch Configurations
 
@@ -154,13 +154,13 @@ When adding/modifying a launch configuration in `launch.json`, after setting `ty
 
 Options for attaching to child process started by .NET Watch.
 
-| Property                | Type          | Description                                                                                                                    | Required | Default                              | Defined Values                                                                      |
-| ----------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------ | ----------------------------------------------------------------------------------- |
-| `action`                | `string`      | Action to take when the child process is initially attached to.                                                                |          | `openExternally`                     | `nothing`, `openExternally`, `debugWithChrome`, `debugWithFirefox`, `debugWithEdge` |
-| `interval`              | `number`      | Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). |          | `500`                                |                                                                                     |
-| `urlPath`               | `string`      | URL path to open when attaching to the process.                                                                                |          | `""`                                 |                                                                                     |
-| `taskProperties`        | `{[key]:any}` | Properties for internal the Visual Studio Code attach task.                                                                    |          | `{ logging: { moduleLoad: false } }` |                                                                                     |
-| `browserTaskProperties` | `{[key]:any}` | Properties for internal the Visual Studio Code browser debug task.                                                             |          | `{}`                                 |                                                                                     |
+| Property                | Type          | Description                                                                                                                    | Required | Default                              | Defined Values                                                     |
+| ----------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------------------------------------ | ------------------------------------------------------------------ |
+| `action`                | `string`      | Action to take when the child process is initially attached to.                                                                |          | `openExternally`                     | `nothing`, `openExternally`, `debugWithChrome`, `debugWithFirefox` |
+| `interval`              | `number`      | Interval in milliseconds to attempt to re-attach to the process after a full hot load build (as well as initially at startup). |          | `500`                                |                                                                    |
+| `urlPath`               | `string`      | URL path to open when attaching to the process.                                                                                |          | `""`                                 |                                                                    |
+| `taskProperties`        | `{[key]:any}` | Properties for internal the Visual Studio Code attach task.                                                                    |          | `{ logging: { moduleLoad: false } }` |                                                                    |
+| `browserTaskProperties` | `{[key]:any}` | Properties for internal the Visual Studio Code browser debug task.                                                             |          | `{}`                                 |                                                                    |
 
 ### Type `buildOptions` Properties
 
@@ -250,7 +250,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
 }
 ```
 
-### Full launch configuration with ESLint, Webpack (watch mode) and Google Chrome (or Mozilla Firefox or Microsoft Edge) client-side debugging
+### Full launch configuration with ESLint, Webpack (watch mode) and Google Chrome (or Mozilla Firefox) client-side debugging
 
 ```json
 {
@@ -293,7 +293,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
 }
 ```
 
-Note: Set `attachOptions.action` to `debugWithFirefox` to debug with Mozilla Firefox or `debugWithEdge` to debug with Microsoft Edge.
+Note: Set `attachOptions.action` to `debugWithFirefox` to debug with Mozilla Firefox.
 
 # Client-Side JavaScript/TypeScript Debugging
 
@@ -303,7 +303,7 @@ While there are many ways to configure a project for client-side debugging, this
 
 Requirements:
 
-1. Supported browser (Google Chrome, Mozilla Firefox or Microsoft Edge)
+1. Google Chrome
 2. Node.js
 3. Node package dependencies
 4. TypeScript, ESLint and Webpack configuration files
@@ -311,13 +311,9 @@ Requirements:
 
 Note that client-side debugging is not required for .NET Stalker Debugger to work. It is only needed if you want to debug client-side code within Visual Studio Code. Also, use of TypeScript (and Webpack) is not required for client-side debugging, but it is used in this example.
 
-## Supported Browsers
+## Google Chrome
 
--   Google Chrome: Download [here](https://www.google.com/chrome/).
--   Mozilla Firefox: Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/).
--   Microsoft Edge: If not pre-installed, download [here](https://www.microsoft.com/en-us/edge/).
-
-Note: Safari does not support remote debugging thus it is not supported by this extension.
+See [Google Chrome](https://www.google.com/chrome/) for installation.
 
 ## Node.js
 
