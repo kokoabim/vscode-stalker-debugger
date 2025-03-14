@@ -4,7 +4,7 @@
 </h1>
 <h3 align="center">All-in-One C# .NET (5+ and Core) and JavaScript/TypeScript Debugger</h3>
 <p align="center">Use this debugger, instead of <code>dotnet</code>/<code>coreclr</code>, in launch configurations in <code>launch.json</code>. It provides the same debugging experience plus additional functionality all in a single debug session.</p>
-<p align="center"><a href="https://marketplace.visualstudio.com/items?itemName=spencerjames.stalker-debugger"><img src="https://vsmarketplacebadges.dev/version/spencerjames.stalker-debugger.png?label=.NET%20Stalker%20Debugger"></a></p>
+<p align="center"><a href="https://marketplace.visualstudio.com/items?itemName=spencerjames.stalker-debugger"><img src="https://vsmarketplacebadges.dev/version/spencerjames.stalker-debugger.svg?label=.NET%20Stalker%20Debugger"></a></p>
 
 <p align="center">
     <img src="images/VSCode-DebugConsole.png" alt="Debug Console" width="562"/><br/>
@@ -117,8 +117,6 @@ Works on modern versions of linux (Ubuntu), macOS and Windows, where the require
     -   If using Mozilla Firefox:
         -   Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
         -   Install Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
-    -   If using Microsoft Edge:
-        -   Install Visual Studio Code [Microsoft Edge Tools for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension
 
 # Launch Configurations
 

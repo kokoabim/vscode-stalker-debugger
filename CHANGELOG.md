@@ -1,9 +1,12 @@
 ## β Beta
 
+#### 2025-03-13 — 0.4.1
+
+-   Fixed missing updated README.md in the last release.
+
 #### 2025-03-13 — 0.4.0
 
 -   Added support for Microsoft Edge debugging.
-    -   Requires [Microsoft Edge Tools for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension.
     -   To use, set `attachOptions.action` to `debugWithEdge`.
 
 #### 2025-02-14 — 0.3.0
