@@ -76,6 +76,43 @@
             }
         },
         {
+            "name": ".NET Stalker (Edge)",
+            "type": "stalker",
+            "request": "launch",
+            "vars": {
+                "framework": "net9.0",
+                "projectDir": "${workspaceFolder}/src/${var:projectName}",
+                "projectName": "TotalStalker"
+            },
+            "project": "${var:projectDir}/${var:projectName}.csproj",
+            "process": "${var:projectDir}/bin/Debug/${var:framework}/${var:projectName}",
+            "cwd": "${var:projectDir}",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "NODE_ENV": "development",
+            },
+            "url": "http://localhost:5000",
+            "webRoot": "${var:projectDir}/wwwroot",
+            "buildOptions": {
+                "preBuildTasks": [
+                    {
+                        "name": "ESLint",
+                        "commandLine": "npx eslint --color ./scripts",
+                    },
+                    {
+                        "name": "Webpack",
+                        "commandLine": "npx webpack --watch --node-env ${env:NODE_ENV} --mode ${env:NODE_ENV} --devtool source-map --color",
+                        "isBackground": true,
+                        "waitFor": false,
+                        "problemMatcher": "$stalker-webpack-watch"
+                    }
+                ],
+            },
+            "attachOptions": {
+                "action": "debugWithEdge"
+            }
+        },
+        {
             "name": "Launch (default coreclr; for comparison)",
             "type": "coreclr",
             "request": "launch",
@@ -94,6 +131,6 @@
             "logging": {
                 "moduleLoad": false
             }
-        }
+        },
     ]
 }

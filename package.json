@@ -1,7 +1,7 @@
 {
     "name": "stalker-debugger",
     "publisher": "spencerjames",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "displayName": ".NET Stalker Debugger",
     "shortName": "Stalker Debugger",
     "description": "Builds, runs, attaches, hot reloads, rebuilds and reattaches a .NET project, with client-side JS/TS breakpoint support. All in one debug session.",
@@ -48,7 +48,8 @@
         "npm",
         "stalker",
         "chrome",
-        "firefox"
+        "firefox",
+        "edge"
     ],
     "activationEvents": [
         "onDebugResolve:stalker"
@@ -216,13 +217,15 @@
                                             "nothing",
                                             "openExternally",
                                             "debugWithChrome",
-                                            "debugWithFirefox"
+                                            "debugWithFirefox",
+                                            "debugWithEdge"
                                         ],
                                         "enumDescriptions": [
                                             "Do nothing",
                                             "Open the URL in the default browser",
                                             "Open the URL in Chrome with the debugger attached",
-                                            "Open the URL in Firefox with the debugger attached"
+                                            "Open the URL in Firefox with the debugger attached",
+                                            "Open the URL in Edge with the debugger attached"
                                         ],
                                         "default": "openExternally"
                                     },
@@ -504,13 +507,13 @@
     "devDependencies": {
         "@types/node": "^22.x",
         "@types/vscode": "^1.96.0",
-        "@typescript-eslint/eslint-plugin": "^8.24.0",
-        "@typescript-eslint/parser": "^8.24.0",
+        "@typescript-eslint/eslint-plugin": "^8.26.1",
+        "@typescript-eslint/parser": "^8.26.1",
         "@vscode/debugadapter": "^1.68.0",
         "@vscode/test-cli": "^0.0.10",
         "@vscode/test-electron": "^2.4.1",
-        "eslint": "^9.20.1",
-        "typescript": "^5.7.3"
+        "eslint": "^9.22.0",
+        "typescript": "^5.8.2"
     },
     "dependencies": {
         "find-process": "^1.4.10"

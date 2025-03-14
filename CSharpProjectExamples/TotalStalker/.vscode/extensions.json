@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit",
+        "spencerjames.stalker-debugger",
+        "firefox-devtools.vscode-firefox-debug",
+        "ms-edgedevtools.vscode-edge-devtools",
+        "dbaeumer.vscode-eslint",
+        "spencerjames.csharpen",
+    ]
+}

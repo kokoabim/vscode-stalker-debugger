@@ -290,6 +290,27 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
                                 this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Mozilla Firefox: ${e}\n` } });
                             }
                         }
+                        else if (this.debugConfiguration.attachOptions.action === "debugWithEdge") {
+                            this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🔍 Debugging with Microsoft Edge (${url}).\n` } });
+
+                            try {
+                                const didStartDebug = await debug.startDebugging(this.debugSession.workspaceFolder, {
+                                    name: '.NET Stalker: Edge',
+                                    type: 'msedge',
+                                    request: 'launch',
+                                    url: url,
+                                    webRoot: this.debugConfiguration.webRoot,
+                                    ...this.debugConfiguration.attachOptions.browserTaskProperties
+                                }, this.debugSession);
+
+                                if (!didStartDebug) {
+                                    this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Microsoft Edge.\n` } });
+                                }
+                            }
+                            catch (e) {
+                                this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: `🚫 Failed to debug with Microsoft Edge: ${e}\n` } });
+                            }
+                        }
                     }
                 }
                 else {
