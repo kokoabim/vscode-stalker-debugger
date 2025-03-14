@@ -8,6 +8,7 @@
 
 -   Added support for Microsoft Edge debugging.
     -   To use, set `attachOptions.action` to `debugWithEdge`.
+    -   Optionally install Visual Studio Code [Debugger for Microsoft Edge](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension for additional features.
 
 #### 2025-02-14 — 0.3.0
 

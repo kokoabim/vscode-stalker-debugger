@@ -117,6 +117,8 @@ Works on modern versions of linux (Ubuntu), macOS and Windows, where the require
     -   If using Mozilla Firefox:
         -   Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
         -   Install Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
+    -   If using Microsoft Edge:
+        -   Optionally install Visual Studio Code [Debugger for Microsoft Edge](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension for additional features
 
 # Launch Configurations
 
