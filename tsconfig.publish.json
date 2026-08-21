@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "ES2022"
+        ],
+        "module": "Node16",
+        "noImplicitReturns": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "sourceMap": true,
+        "strict": true,
+        "target": "ES2022",
+        "skipLibCheck": true
+    },
+    "exclude": [
+        ".vscode-test/",
+        "dist",
+        "lib",
+        "node_modules",
+        "CSharpProjectExamples"
+    ]
+}

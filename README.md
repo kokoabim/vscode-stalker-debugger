@@ -51,10 +51,10 @@ All use cases of .NET Stalker Debugger have [all primary features](#primary-feat
 <span style="font-size:.85em">Backend: C#/.NET breakpoint in VS Code</span>
 </p>
 
--   Example Project: C# ASP.NET Web App/API
--   Debug Session:
-    -   Debug/breakpoints of C# ASP.NET Web App/API
-    -   Watch, re-build and re-attach to project's new process automatically
+- Example Project: C# ASP.NET Web App/API
+- Debug Session:
+    - Debug/breakpoints of C# ASP.NET Web App/API
+    - Watch, re-build and re-attach to project's new process automatically
 
 ### 🌕 Full-Stack & 📄 Front-End Developers (Similar Launch Configurations)
 
@@ -68,13 +68,13 @@ All use cases of .NET Stalker Debugger have [all primary features](#primary-feat
 <span style="font-size:.85em">Front-end: JavaScript/TypeScript debug console in VS Code</span>
 </p>
 
--   Example Project: C# ASP.NET Web App/API with client-side HTML/CSS and JavaScript and/or TypeScript
--   Debug Session:
-    -   Debug/breakpoints of C# ASP.NET Web App/API
-    -   Watch, re-build and re-attach to project's new process automatically
-    -   Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome or Mozilla Firefox)
-    -   Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
-    -   Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
+- Example Project: C# ASP.NET Web App/API with client-side HTML/CSS and JavaScript and/or TypeScript
+- Debug Session:
+    - Debug/breakpoints of C# ASP.NET Web App/API
+    - Watch, re-build and re-attach to project's new process automatically
+    - Debug/breakpoints of client-side JavaScript/TypeScript (in Google Chrome or Mozilla Firefox)
+    - Watch and transpile TypeScript to JavaScript (if using TypeScript and Webpack)
+    - Watch and reload browser on front-end changes (HTML/CSS, JavaScript/TypeScript, etc.)
 
 # 🕵 The .NET Stalker Debugger Life-Cycle
 
@@ -91,12 +91,12 @@ Logical order of phases within the [three primary features](#primary-three-featu
 | --- | --------- | ------- | ------- | ------------------------------------------------------------------------------------- |
 | 1   | PreBuild  | 🛠️      | eslint  | Lint JavaScript and TypeScript files                                                  |
 | 2   | PreBuild  | 🛠️      | webpack | Transpile TypeScript to JavaScript for client-side use                                |
-| 3   | Continual | ⌚️     | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                   |
+| 3   | Continual | ⌚️      | webpack | Watch TypeScript files to "hot transpile" to JavaScript when needed                   |
 | 4   | Build     | 🛠️      | dotnet  | Build and run the .NET project                                                        |
 | 5   | Debug     | 🪲      | vscode  | Attach to the .NET project process for backend debugging                              |
 | 6   | Debug     | 🪲      | browser | Debug with Google Chrome or Mozilla Firefox developer tools for client-side debugging |
-| 7   | Continual | ⌚️     | dotnet  | Watch .NET project files to perform "hot reloads" when possible                       |
-| 8   | On-Demand | ⌚️     | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed    |
+| 7   | Continual | ⌚️      | dotnet  | Watch .NET project files to perform "hot reloads" when possible                       |
+| 8   | On-Demand | ⌚️      | vscode  | Rebuild and re-attach to project's new process when a "hot reload" build is needed    |
 
 # Requirements
 
@@ -106,19 +106,19 @@ Works on modern versions of linux (Ubuntu), macOS and Windows, where the require
 
 ### Requirements
 
--   .NET SDK 6.0 or later
--   Visual Studio Code 1.96.0 or later
--   Visual Studio Code [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) extensions
+- .NET SDK 6.0 or later
+- Visual Studio Code 1.130.0 or later
+- Visual Studio Code [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) extensions
 
 ### Requirements for Client-Side Debugging
 
--   Node.js and NPM
--   Google Chrome and/or Mozilla Firefox
-    -   If using Mozilla Firefox:
-        -   Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
-        -   Install Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
-    -   If using Microsoft Edge:
-        -   Optionally install Visual Studio Code [Debugger for Microsoft Edge](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension for additional features
+- Node.js and NPM
+- Google Chrome and/or Mozilla Firefox
+    - If using Mozilla Firefox:
+        - Use Firefox [Developer Edition](https://www.mozilla.org/en-US/firefox/developer/)
+        - Install Visual Studio Code [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) extension
+    - If using Microsoft Edge:
+        - Optionally install Visual Studio Code [Debugger for Microsoft Edge](https://marketplace.visualstudio.com/items?itemName=ms-edgedevtools.vscode-edge-devtools) extension for additional features
 
 # Launch Configurations
 
@@ -220,7 +220,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "project": "${workspaceFolder}/src/MyWebApp/MyWebApp.csproj",
-    "process": "${workspaceFolder}/src/MyWebApp/bin/Debug/net9.0/MyWebApp",
+    "process": "${workspaceFolder}/src/MyWebApp/bin/Debug/net10.0/MyWebApp",
     "cwd": "${workspaceFolder}/src/MyWebApp",
     "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -236,7 +236,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "vars": {
-        "framework": "net9.0",
+        "framework": "net10.0",
         "projectDir": "${workspaceFolder}/src/${var:projectName}",
         "projectName": "MyWebApp"
     },
@@ -258,7 +258,7 @@ See [dotnet-watch configuration](https://learn.microsoft.com/en-us/aspnet/core/t
     "type": "stalker",
     "request": "launch",
     "vars": {
-        "framework": "net9.0",
+        "framework": "net10.0",
         "projectDir": "${workspaceFolder}/src/${var:projectName}",
         "projectName": "<PROJECTNAME>"
     },
@@ -420,12 +420,17 @@ import { resolve } from "path";
 import { Configuration } from "webpack";
 
 const config: Configuration = {
-    entry: glob.sync("./scripts/**/*.ts").reduce((entries, path) => {
-        const entry = path.replace(/(.*\/)?scripts\//, "").replace(".ts", "");
-        path = "./" + path;
-        entries[entry] = path;
-        return entries;
-    }, {} as { [key: string]: string }),
+    entry: glob.sync("./scripts/**/*.ts").reduce(
+        (entries, path) => {
+            const entry = path
+                .replace(/(.*\/)?scripts\//, "")
+                .replace(".ts", "");
+            path = "./" + path;
+            entries[entry] = path;
+            return entries;
+        },
+        {} as { [key: string]: string },
+    ),
     output: {
         path: resolve(__dirname, "wwwroot/js"),
         filename: "[name].js",

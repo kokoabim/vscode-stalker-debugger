@@ -18229,7 +18229,7 @@ __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap
 const jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
 const timeLoaded = new Date().toLocaleTimeString();
 (0, jquery_1.default)(() => {
-    console.log('Time loaded: ', timeLoaded);
+    console.log('Time loaded — ', timeLoaded);
 });
 
 

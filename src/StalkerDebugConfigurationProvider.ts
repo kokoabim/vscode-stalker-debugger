@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync } from "fs";
-import { CancellationToken, DebugConfiguration, DebugConfigurationProvider, ProviderResult, WorkspaceFolder, window, env } from "vscode";
+import { CancellationToken, DebugConfiguration, DebugConfigurationProvider, ProviderResult, WorkspaceFolder, window } from "vscode";
 
 import { StalkerDebugConfiguration } from "./StalkerDebugConfiguration";
 import { VariableUtil } from "./VariableUtil";

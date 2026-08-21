@@ -71,7 +71,9 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
             else if (request.command === 'disconnect') {
                 this.stopWatching(false);
             }
-            else return; // ! only above commands continue
+            else {
+                return; // ! only above commands continue
+            }
 
             this.sendMessage.fire(this.createDebugResponse(request));
         }
@@ -328,6 +330,14 @@ export class StalkerDebugAdapter implements Disposable, DebugAdapter {
 
     private async startDebugging(): Promise<void> {
         this.sendMessage.fire({ type: 'event', event: 'output', body: { category: 'console', output: '🚀 Starting .NET Stalker Debugger.\n' } });
+
+        this.disposables.push(debug.onDidTerminateDebugSession((e: DebugSession) => {
+            if (!this.debuggerIsStopping
+                && (e.id === this.debugSession.id || e.parentSession?.id === this.debugSession.id || e.parentSession?.parentSession?.id === this.debugSession.id)
+                && (e.type.includes("chrome") || e.type.includes("firefox") || e.type.includes("msedge"))) {
+                this.stopWatching(true);
+            }
+        }));
 
         if (!await this.startPreBuildTasks()) return;
 
